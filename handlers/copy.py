@@ -1,2 +1,2 @@
-title = 'YouFace 2.0'
-subtitle = "A billion dollars and it's yours!"
+title = 'Maxes Music Matcher'
+subtitle = "Are YOU ready to rock!"
