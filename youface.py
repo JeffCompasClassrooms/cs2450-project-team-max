@@ -7,7 +7,7 @@ import timeago
 import tinydb
 
 # handlers
-from handlers import friends, login, posts
+from handlers import friends, login, posts, alerts
 
 app = flask.Flask(__name__)
 
@@ -19,7 +19,7 @@ def convert_time(ts):
 app.register_blueprint(friends.blueprint)
 app.register_blueprint(login.blueprint)
 app.register_blueprint(posts.blueprint)
-
+app.register_blueprint(alerts.blueprint)
 app.secret_key = 'mygroup'
 app.config['SESSION_TYPE'] = 'filesystem'
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
