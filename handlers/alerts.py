@@ -55,6 +55,6 @@ def alerts():
         table.upsert(friend,(User.username == friend['username']) &
                         (User.password == friend['password']))
     return flask.render_template('feed.html',title=copy.title,
-            subtitle=copy.subtitle, user=user, username=username, alerts=user['alerts'])
+            subtitle=copy.subtitle, user=user, username=username, alerts=user['alerts'], friends= users.get_user_friends(db,user))
 
         
