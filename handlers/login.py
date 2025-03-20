@@ -1,5 +1,4 @@
 import flask
-
 from handlers import copy
 from db import posts, users, helpers
 
@@ -9,11 +8,10 @@ blueprint = flask.Blueprint("login", __name__)
 def loginscreen():
     """Present a form to the user to enter their username and password."""
     db = helpers.load_db()
-
     # First check if already logged in
     username = flask.request.cookies.get('username')
     password = flask.request.cookies.get('password')
-
+    
     if username is not None and password is not None:
         if users.get_user(db, username, password):
             # If they are logged in, redirect them to the feed page
@@ -31,22 +29,44 @@ def login():
     log in a user, based on what button they click.
     """
     db = helpers.load_db()
-
+    #getting username
     username = flask.request.form.get('username')
     password = flask.request.form.get('password')
-
+    #creating a response for login,index
     resp = flask.make_response(flask.redirect(flask.url_for('login.index')))
+    #making sure username and password is not empty
+    if username is "":
+        flask.flash("invaliud username", 'danger')
+        return flask.redirect(flask.url_for('login.loginscreen'))
     resp.set_cookie('username', username)
+    if password is "":
+        flask.flash("Invalid password", 'danger')
+        return flask.redirect(flask.url_for('login.loginscreen'))
     resp.set_cookie('password', password)
-
     submit = flask.request.form.get('type')
-    if submit == 'Create':
-        if users.new_user(db, username, password) is None:
+    if submit == 'Sign Up':
+        if users.get_user(db, username, password) is None:
+            for i in username:
+                #checking if username is a character or a number
+                if not i.isalpha() and not i.isdigit() and not i=='_':
+                    print(i)
+                    resp.set_cookie('username', '', expires=0)
+                    resp.set_cookie('password', '', expires=0)
+                    flask.flash('Username not valid'.format(username), 'danger')
+                    return flask.redirect(flask.url_for('login.loginscreen'))
+           
+            flask.flash('User {} created successfully!'.format(username), 'success')
+            users.new_user(db,username,password)
+            resp.set_cookie('password',password)
+            resp.set_cookie('username',password)
+            return flask.redirect(flask.url_for('login.loginscreen'))
+        else:
             resp.set_cookie('username', '', expires=0)
             resp.set_cookie('password', '', expires=0)
-            flask.flash('Username {} already taken!'.format(username), 'danger')
+            flask.flash('Username is taken'.format(username), 'danger')
             return flask.redirect(flask.url_for('login.loginscreen'))
-        flask.flash('User {} created successfully!'.format(username), 'success')
+    
+
     elif submit == 'Delete':
         if users.delete_user(db, username, password):
             resp.set_cookie('username', '', expires=0)
@@ -73,7 +93,7 @@ def index():
     # make sure the user is logged in
     username = flask.request.cookies.get('username')
     password = flask.request.cookies.get('password')
-    if username is None and password is None:
+    if username == "" and password == "":
         return flask.redirect(flask.url_for('login.loginscreen'))
     user = users.get_user(db, username, password)
     if not user:
@@ -81,6 +101,7 @@ def index():
         return flask.redirect(flask.url_for('login.loginscreen'))
 
     # get the info for the user's feed
+    
     friends = users.get_user_friends(db, user)
     all_posts = []
     for friend in friends + [user]:
@@ -90,4 +111,4 @@ def index():
 
     return flask.render_template('feed.html', title=copy.title,
             subtitle=copy.subtitle, user=user, username=username,
-            friends=friends, posts=sorted_posts)
+            friends=friends, posts=sorted_posts, alerts=user['alerts'])

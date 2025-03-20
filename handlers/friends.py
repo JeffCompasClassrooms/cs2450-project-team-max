@@ -24,8 +24,25 @@ def addfriend():
 
     # add the friend
     name = flask.request.form.get('name')
-    msg, category = users.add_user_friend(db, user, name)
-
+    if name =="":
+        flask.flash("Enter name",'danger')
+        return flask.redirect(flask.url_for('login.index'))
+    if name== user['username']:
+        flask.flash("cannot add self",'danger')
+        return flask.redirect(flask.url_for('login.index'))
+    if name in user['pending-friends']:
+        flask.flash("friend request pending",'danger')
+        return flask.redirect(flask.url_for('login.index'))
+    if name in user['friends']:
+        flask.flash("already friends",'danger')
+        return flask.redirect(flask.url_for('login.index'))
+    friend = users.get_user_by_name(db,name)
+    print("friend is " )
+    print(friend)
+    print("done")
+    
+    msg, category = users.add_user_friend(db, user, friend)
+    
     flask.flash(msg, category)
     return flask.redirect(flask.url_for('login.index'))
 

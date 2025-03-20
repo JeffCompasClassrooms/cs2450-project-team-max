@@ -44,7 +44,7 @@
         </form>
       </div>
     </div>
-
+    
     <div class="card bg-light">
       <div class="card-body">
         <h3 class="card-title">My Friends</h3>
@@ -61,5 +61,35 @@
         {% endif %}
       </div>
     </div>
+    {% if alerts %}
+    
+    <div class="card bg-light">
+      <div class="card-body">
+        <form method="post" action="/request">
+          <h3 class="card-title">Alerts</h3>
+          <ul>
+            {% for types, message in alerts%}
+            <div class="alert alert-{{ types }}">{{ message }}</div>
+              <div>
+                <li><p>{{ types }}</p>
+                  <div class="form-group">
+                    <input type="hidden" name="name" value="{{ types }}">
+                    <input type="hidden" name="alert" value="{{ message }}">
+                    <input class="btn btn-primary" type="submit" name="type" value="accept" >
+                    <input class="btn btn-success" type="submit" name="type" value="decline">
+                    
+                </div>
+                </li></div>
+              {% endfor %}
+          </ul> 
+              
+          </form>
+
+        
+          
+        {% else %}
+          
+        {% endif %}
   </div>
+  
 {% endblock %}

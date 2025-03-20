@@ -10,3 +10,18 @@
         }
     }
 }
+.container{
+    padding: 0.5em 0.6em;
+    h3{
+        color:white
+    }
+    h2{
+        color:white
+    }
+    a{
+        color:white
+    }
+    p{
+        color:white
+    }
+}
