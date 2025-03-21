@@ -20,4 +20,34 @@
     {% endfor %}
   </div>
 </div>
+<div class="card bg-light">
+  <div class="card-body">
+    <form method="post" action='/friend/{{ friend.username }}' >
+      <h3 class="card-title">{{friend}}</h3>
+      <ul>
+        {% for message in all_messages%}
+        <div class="alert alert-{{ types }}">{{ message }}</div>
+          <div>
+            <li><p>{{ types }}</p>
+              <div class="form-group">
+                <input type="hidden" name="name" value="{{ types }}">
+                <input type="hidden" name="alert" value="{{ message }}">
+                
+            </div>
+            </li></div>
+          {% endfor %}
+          
+      </ul> 
+          
+      </form>
+      <div class="col col-lg-8">
+        <div class="card-body">
+          <form method="post" action="/friend/{{ friend }}/message">
+            <div class="form-group">
+              <textarea class="form-control" name="send_message" rows="3" placeholder="What's on your mind?"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary" name="message_submit">Submit</button>
+          </form>
+      </div>
+
 {% endblock %}

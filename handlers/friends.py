@@ -1,7 +1,7 @@
 import flask
 
 from handlers import copy
-from db import posts, users, helpers
+from db import posts, users, helpers, messages
 
 blueprint = flask.Blueprint("friends", __name__)
 
@@ -79,9 +79,36 @@ def view_friend(fname):
         return flask.redirect(flask.url_for('login.loginscreen'))
 
     friend = users.get_user_by_name(db, fname)
-    all_posts = posts.get_posts(db, friend)[::-1] # reverse order
+    print(friend)
+    all_posts = posts.get_posts(db, friend) # reverse order
+    all_message =messages.get_messages(db,user,friend)
 
     return flask.render_template('friend.html', title=copy.title,
             subtitle=copy.subtitle, user=user, username=username,
             friend=friend['username'],
-            friends=users.get_user_friends(db, user), posts=all_posts)
+            friends=users.get_user_friends(db, user), posts=all_posts, all_messages=all_message)
+@blueprint.route('/friend/<fname>/message',methods=['POST'])
+def send_message(fname):
+    db =helpers.load_db()
+    username = flask.request.cookies.get('username')
+    password = flask.request.cookies.get('password')
+
+    user = users.get_user(db, username, password)
+    if not user:
+        flask.flash('You must be logged in to do that.', 'danger')
+        return flask.redirect(flask.url_for('login.loginscreen'))
+
+    friend = users.get_user_by_name(db, fname)
+    text= flask.request.form.get('send_message')
+    all_message =messages.get_messages(db,user,friend)
+    if text == "":
+        flask.flash('Must have a message to send', 'danger')
+        return flask.redirect(flask.url_for('friends.view_friend',fname = fname))
+    print(text)
+    print(all_message)
+    messages.message(db,user,friend,text)
+    return flask.render_template('friend.html', title=copy.title,
+        subtitle=copy.subtitle, user=user, username=username,
+        friend=friend['username'],
+        friends=users.get_user_friends(db, user), all_messages=all_message)
+    
