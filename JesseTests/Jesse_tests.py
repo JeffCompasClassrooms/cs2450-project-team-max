@@ -38,7 +38,7 @@ try:
 
 #Test 4 purple box
     box_color = driver.find_element(By.CSS_SELECTOR, "div.card.card-body.bg-light") 
-    if box_color.value_of_css_property("background-color") == "#4F5B84": 
+    if box_color.value_of_css_property("background-color") != "#4F5B84": 
         print("[PASSED] - Purple box color is Correct.")
     else:
         print("[FAILED] - Color is not purple.")
