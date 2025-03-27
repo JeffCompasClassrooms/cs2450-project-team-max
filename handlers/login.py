@@ -36,7 +36,7 @@ def login():
     resp = flask.make_response(flask.redirect(flask.url_for('login.index')))
     #making sure username and password is not empty
     if username is "":
-        flask.flash("invaliud username", 'danger')
+        flask.flash("invalid username", 'danger')
         return flask.redirect(flask.url_for('login.loginscreen'))
     resp.set_cookie('username', username)
     if password is "":
