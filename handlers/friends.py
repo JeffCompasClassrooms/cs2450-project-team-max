@@ -1,5 +1,5 @@
 import flask
-
+import tinydb
 from handlers import copy
 from db import posts, users, helpers, messages
 
@@ -37,12 +37,7 @@ def addfriend():
         flask.flash("already friends",'danger')
         return flask.redirect(flask.url_for('login.index'))
     friend = users.get_user_by_name(db,name)
-    print("friend is " )
-    print(friend)
-    print("done")
-    
     msg, category = users.add_user_friend(db, user, friend)
-    
     flask.flash(msg, category)
     return flask.redirect(flask.url_for('login.index'))
 
@@ -79,14 +74,12 @@ def view_friend(fname):
         return flask.redirect(flask.url_for('login.loginscreen'))
 
     friend = users.get_user_by_name(db, fname)
-    print(friend)
-    all_posts = posts.get_posts(db, friend) # reverse order
+    all_posts = posts.get_posts(db, friend)[::-1] # reverse order
     all_message =messages.get_messages(db,user,friend)
-
     return flask.render_template('friend.html', title=copy.title,
             subtitle=copy.subtitle, user=user, username=username,
             friend=friend['username'],
-            friends=users.get_user_friends(db, user), posts=all_posts, all_messages=all_message)
+            friends=users.get_user_friends(db, user), posts=all_posts, all_messages=all_message,alerts=user['alerts'])
 @blueprint.route('/friend/<fname>/message',methods=['POST'])
 def send_message(fname):
     db =helpers.load_db()
@@ -101,14 +94,14 @@ def send_message(fname):
     friend = users.get_user_by_name(db, fname)
     text= flask.request.form.get('send_message')
     all_message =messages.get_messages(db,user,friend)
-    if text == "":
+    if text == "" or text == None:
         flask.flash('Must have a message to send', 'danger')
+        
         return flask.redirect(flask.url_for('friends.view_friend',fname = fname))
-    print(text)
-    print(all_message)
+
     messages.message(db,user,friend,text)
-    return flask.render_template('friend.html', title=copy.title,
-        subtitle=copy.subtitle, user=user, username=username,
-        friend=friend['username'],
-        friends=users.get_user_friends(db, user), all_messages=all_message)
-    
+    table = db.table('users')
+    User = tinydb.Query()
+    table.upsert(friend,(User.username == friend['username']) &
+                        (User.password == friend['password']))
+    return flask.redirect(flask.url_for('friends.view_friend',fname = fname))
