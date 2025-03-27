@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+  <div class="col-sm-6 mx-auto">
+    <div class="card card-body bg-light">
+      <form method="post" action="/createprofile">
+        <fieldset>
+          <legend>Create Profile</legend>
+          <hr />
+          <div class="form-group">
+            <label for="instrument">Instrument</label>
+            <input type="text" class="form-control" name="instrument">
+          </div>
+          <div class="form-group">
+            <label for="experience">How many years experience</label>
+            <input type="password" class="form-control" name="experience">
+          </div>
+          <div class="form-group">
+            <label for="travel">Are you willing to travel?</label>
+            <input type="password" class="form-control" name="travel">
+          </div>
+          <div class="form-group">
+            <input class="btn btn-primary" type="submit" name="type" value="Save/Finish creating profile">
+            <input class="btn btn-success" type="submit" name="type" value="cancel">
+            <!-- <input class="btn btn-danger" type="submit" name="type" value="Delete"> -->
+          </div>
+        </fieldset>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
