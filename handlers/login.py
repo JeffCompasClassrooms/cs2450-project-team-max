@@ -97,7 +97,7 @@ def index():
         return flask.redirect(flask.url_for('login.loginscreen'))
     user = users.get_user(db, username, password)
     if not user:
-        flask.flash("Invalid credentials. If you're new, click the signup button to become a member.", 'danger')
+        flask.flash("Invalid credentials. If you're new, click the sign up button to become a member.", 'danger')
         return flask.redirect(flask.url_for('login.loginscreen'))
 
     # get the info for the user's feed
