@@ -1,7 +1,7 @@
 import flask
 from handlers import copy
 from db import posts, users, helpers
-
+UPLOAD_FOLDER = 'static/uploads'
 blueprint = flask.Blueprint("login", __name__)
 
 @blueprint.route('/loginscreen')
@@ -111,4 +111,9 @@ def index():
 
     return flask.render_template('feed.html', title=copy.title,
             subtitle=copy.subtitle, user=user, username=username,
-            friends=friends, posts=sorted_posts, alerts=user['alerts'])
+            friends=friends, posts=sorted_posts, alerts=user['alerts'],)
+@blueprint.route('/static/uploads/<filename>')
+def uploaded_file(filename):
+    """Serve uploaded media files."""
+
+    return flask.send_from_directory(UPLOAD_FOLDER, filename)
