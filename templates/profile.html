@@ -1,6 +1,12 @@
+<!DOCTYPE html>
 {% extends "base.html" %}
+{% block title %}Create Profile{% endblock %}
 
 {% block content %}
+
+# call the css for this page
+<head><link rel="stylesheet" href="{{ url_for('static', filename='profile.css') }}"></head>
+
 <div class="row">
   <div class="col-sm-6 mx-auto">
     <div class="card card-body bg-light">
