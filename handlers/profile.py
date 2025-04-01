@@ -8,7 +8,7 @@ blueprint = flask.Blueprint("profile", __name__)
 def profileScreen():
     """Present a form to the user to enter their username and password."""
     db = helpers.load_db()
-    # First check if already logged in
+    # First check if user has already put in their profile information
     fullName = flask.request.cookies.get('fullName')
     age = flask.request.cookies.get('age')
     instrument = flask.request.cookies.get('instrument')
@@ -17,17 +17,20 @@ def profileScreen():
     covers = flask.request.cookies.get('covers')
     location = flask.request.cookies.get('location')
     travel = flask.request.cookies.get('travel')
-'''   
-    if username is not None and password is not None:
-        if users.get_user(db, username, password):
-            # If they are logged in, redirect them to the feed page
-            flask.flash('You are already logged in.', 'warning')
-            return flask.redirect(flask.url_for('login.index'))
 
-    return flask.render_template('login.html', title=copy.title,
-            subtitle=copy.subtitle)
-''' 
+# where I left off
+    if (fullName, age, instrument, experience, genre, covers, location, travel): not None
 
+    if users.user_profile(db, fullName, age, instrument, experience, genre, covers, location, travel):
+            # If they have already filled out their profile, allow them to make edits
+            flask.flash('You can edit your profile below.', 'info')
+            return flask.render_template('profile.html', title=copy.title,
+                fullName=fullName, age=age,
+                instrument=instrument, experience=experience,
+                genre=genre, covers=covers, location=location,
+                travel=travel)
+        
+    # Otherwise, present the profile creation form   
 @blueprint.route('/profile', methods=['POST'])
 def profile():
 

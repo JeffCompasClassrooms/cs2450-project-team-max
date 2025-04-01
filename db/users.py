@@ -15,6 +15,28 @@ def new_user(db, username, password):
             }
     return users.insert(user_record)
 
+def user_profile(db, fullName, age, instrument, experience, genre, covers, location, travel):
+    """
+    Create a new user profile in the database.
+    """
+    users = db.table('users')
+    User = tinydb.Query()
+    
+    # Create a new user profile record
+    user_profile_record = {
+            'fullName': fullName,
+            'age': age,
+            'instrument': instrument,
+            'experience': experience,
+            'genre': genre,
+            'covers': covers,
+            'location': location,
+            'travel': travel
+            }
+    
+    # Update the user profile in the database
+    return users.upsert(user_profile_record, User.username == fullName)
+
 def get_user(db, username, password):
     users = db.table('users')
     User = tinydb.Query()
