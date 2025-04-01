@@ -11,6 +11,7 @@ def new_user(db, username, password):
             'friends': [],
             'pending-friends':[],
             'alerts':[],
+            'group':None
             }
     return users.insert(user_record)
 
@@ -36,7 +37,6 @@ def add_user_friend(db, user, friend):
     User = tinydb.Query()
     if users.get(User.username == friend['username']):
         if friend not in user['friends'] and friend['username'] is not user['username']:
-            friend['pending-friends'].append(user['username'])
             friend['alerts'].append([ user['username'],'friend request'])
             users.upsert(user, (User.username == user['username']) &
                     (User.password == user['password']))

@@ -1,7 +1,7 @@
 import flask
 from handlers import copy
-from db import posts, users, helpers
-UPLOAD_FOLDER = 'static/uploads'
+from db import posts, users, helpers, groups
+UPLOAD_FOLDER = 'static/uploads/'
 blueprint = flask.Blueprint("login", __name__)
 
 @blueprint.route('/loginscreen')
@@ -101,7 +101,7 @@ def index():
         return flask.redirect(flask.url_for('login.loginscreen'))
 
     # get the info for the user's feed
-    
+    group = groups.get_group(db,user['group'])
     friends = users.get_user_friends(db, user)
     all_posts = []
     for friend in friends + [user]:
@@ -111,7 +111,7 @@ def index():
 
     return flask.render_template('feed.html', title=copy.title,
             subtitle=copy.subtitle, user=user, username=username,
-            friends=friends, posts=sorted_posts, alerts=user['alerts'],)
+            friends=friends, posts=sorted_posts, alerts=user['alerts'],group = user['group'])
 @blueprint.route('/static/uploads/<filename>')
 def uploaded_file(filename):
     """Serve uploaded media files."""

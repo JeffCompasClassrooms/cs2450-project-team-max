@@ -27,14 +27,23 @@
 }
 .mymessage{
     color:white;
-    background-color: gray;
+    background-color: blue;
 }
 .othermessage{
     color:white;
-    background-color: blue;
+    background-color: gray;
+    max-width: 300px;
+
+}
+.left-oriented{
+    right:0px
+}
+.right-oriented{
+    left :  225px;
 }
 .rounded-element{
     border-radius: 12px;
+    max-width: 300px;
     overflow: hidden;
     border:0px solid #fff;
 }

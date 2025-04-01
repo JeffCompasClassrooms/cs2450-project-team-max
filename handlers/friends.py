@@ -30,7 +30,7 @@ def addfriend():
     if name== user['username']:
         flask.flash("cannot add self",'danger')
         return flask.redirect(flask.url_for('login.index'))
-    if name in user['pending-friends']:
+    if name in user['alerts']:
         flask.flash("friend request pending",'danger')
         return flask.redirect(flask.url_for('login.index'))
     if name in user['friends']:
@@ -64,7 +64,8 @@ def unfriend():
 def view_friend(fname):
     """View the page of a given friend."""
     db = helpers.load_db()
-
+    table = db.table('users')
+    User = tinydb.Query()
     username = flask.request.cookies.get('username')
     password = flask.request.cookies.get('password')
 
@@ -76,6 +77,11 @@ def view_friend(fname):
     friend = users.get_user_by_name(db, fname)
     all_posts = posts.get_posts(db, friend)[::-1] # reverse order
     all_message =messages.get_messages(db,user,friend)
+    request = [fname ,'message']
+    if request in user['alerts']:
+        user['alerts'].remove(request)
+        table.upsert(user, (User.username == user['username']) &
+                        (User.password == user['password']))
     return flask.render_template('friend.html', title=copy.title,
             subtitle=copy.subtitle, user=user, username=username,
             friend=friend['username'],
@@ -93,6 +99,7 @@ def send_message(fname):
 
     friend = users.get_user_by_name(db, fname)
     text= flask.request.form.get('send_message')
+    print(text)
     all_message =messages.get_messages(db,user,friend)
     if text == "" or text == None:
         flask.flash('Must have a message to send', 'danger')

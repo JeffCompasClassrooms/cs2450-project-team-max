@@ -50,8 +50,8 @@
   
   
 
-  <div class="col col-lg-3">
-    <div class="card bg-light mb-3">
+  <div class="col col-lg-3"  >
+    <div class="card bg-light mb-3" >
       <div class="card-body">
         <h3 class="card-title">Add Friend</h3>
         <form method="post" action="/addfriend">
@@ -63,7 +63,7 @@
       </div>
     </div>
     
-    <div class="card bg-light">
+    <div class="card bg-light mb-3" >
       <div class="card-body">
         <h3 class="card-title">My Friends</h3>
         {% if friends %}
@@ -79,7 +79,7 @@
     </div>
 
     {% if alerts %}
-    <div class="card bg-light">
+    <div class="card bg-light mb-3">
       <div class="card-body">
         <form method="post" action="/request">
           <h3 class="card-title">Alerts</h3>
@@ -91,6 +91,17 @@
                     {% if message == 'friend request' %}
                     <input type="hidden" name="name" value="{{ types }}">
                     <input type="hidden" name="alert" value="{{ message }}">
+                    <p class="card-text">{{message }} from {{types}}</p> 
+                    <input class="btn btn-primary" type="submit" name="type" value="accept">
+                    <input class="btn btn-success" type="submit" name="type" value="decline">
+                    {% elif message == 'message' %}
+                    <input type="hidden" name="name" value="{{ types }}">
+                    <input type="hidden" name="alert" value="{{ message }}">
+                    <p class="card-text">{{message }} from {{types}}</p> 
+                    {% elif message == 'group invite' %}
+                    <input type="hidden" name="name" value="{{ types }}">
+                    <input type="hidden" name="alert" value="{{ message }}">
+                    <p class="card-text">{{message }} from {{types}}</p> 
                     <input class="btn btn-primary" type="submit" name="type" value="accept">
                     <input class="btn btn-success" type="submit" name="type" value="decline">
                     {% endif %}
@@ -103,6 +114,43 @@
       </div>
     </div>
     {% endif %}
+    <div class="card bg-light mb-3" style="column-gap: 10px;">
+      <div class="card-body">
+        {%if group %}
+        <h3 class="card-title">group {{group}}</h3>
+          <ul>   
+            <div>
+              <li><a href="/group/{{ group }}"> {{ group }}</a></li>
+              
+            </div>
+            
+          </ul>
+          <form method="post" action="/add_member">
+            <div class="form-group mb-1">
+              <p>invite a friend</p>
+              <input type="text" class="form-control" name="iname" />
+            </div>
+            <button type="submit" class="form-control btn btn-primary" name="add_member">Submit</button>
+          </form>
+        {% else %}
+        <p class="card-text">Sorry, You're not in a group!</p>
+         
+            <div class="card-body">
+              <h3 class="card-title">Make Group</h3>
+              <form method="post" action="/makegroup">
+                <div class="form-group mb-1">
+                  <input type="text" class="form-control" name="gname" placeholder="group name" />
+                </div>
+                <button type="submit" class="form-control btn btn-primary" name="makegroup">Submit</button>
+              </form>
+              
+            </div>
+
+        {% endif %}
+      </div>
+    </div>
+    
+    
     </div>  
   
   </div>

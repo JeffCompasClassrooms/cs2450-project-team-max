@@ -1,8 +1,9 @@
 import flask
+import time
 from db import posts, users, helpers
 import os
 blueprint = flask.Blueprint("posts", __name__)
-UPLOAD_FOLDER = 'static/uploads'
+UPLOAD_FOLDER = 'static/uploads/'
 @blueprint.route('/post', methods=['POST'])
 def post():
     db = helpers.load_db()
@@ -21,9 +22,9 @@ def post():
 
     if media and allowed_file(media.filename):
         file_extension = media.filename.rsplit('.', 1)[1].lower()
-        media_filename = media.filename
-        media.save(os.path.join(UPLOAD_FOLDER, media_filename))
 
+        media_filename = f"{user['username']}_{time.time()}.{file_extension}"
+        media.save(os.path.join(UPLOAD_FOLDER, media_filename))
         # Determine media type
         if file_extension in {'png', 'jpg', 'jpeg', 'gif'}:
             media_type = 'image'
@@ -32,11 +33,8 @@ def post():
         elif file_extension in {'mp3','wav','.ogg'}:
             media_type='audio'
     # Store in TinyDB
-    media_url= f"/static/uploads/{media_filename}" if media_filename else None
+    media_url= f"static/uploads/{media_filename}" if media_filename else None
     
-    print(media_url)
-    print(media_filename)
-    print(media_type)
     posts.add_post(db, user, post, media_url ,media_type)
     return flask.redirect(flask.url_for('login.index'))
 
