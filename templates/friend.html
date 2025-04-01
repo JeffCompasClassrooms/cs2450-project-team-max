@@ -1,23 +1,62 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="row justify-content-md-center mb-4">
+<div class="row justify-content-md-center mb-">
   <h3 class="card-title">{{ friend }}</h3>
 </div>
 
 
-<div class="row justify-content-md-center">
-  <div class="col col-lg-8">
+<div class="row justify-content-md-center"style="column-gap: 18px";>
+  
+  <div class="card bg-light col-lg-8 ">
     <h2>Recent Posts</h2>
-    {% for post in posts %}
-    <div class="card bg-light">
+      {% for post in posts %}
+   
       <div class="card-body">
         <h4 class="card-title">{{ post.user }}</h4>
         <h6 class="card-subtitle mb-2 text-muted">{{ post.time|convert_time }}</h6>
         <p class="card-text">{{ post.text }}</p>
       </div>
-    </div>
+    
+    
     {% endfor %}
+    
   </div>
+  
+  <div class="card bg-light ">
+    <div class="card-body">
+      <form method="post" action='/friend/{{ friend.username }}' >
+        <div class="d-none" >
+          <input type="hidden" name="name" value="{{ types }}">
+          <input type="hidden" name="alert" value="{{ message }}">
+          
+      </div>
+        <h3 class="card-title">{{friend}}</h3>
+        <ul>  
+          {% for message in all_messages%}
+            <div class="card rounded-element {{ 'right:225px' if message.sender == user.username else '' }} ">
+               <div class="alert alert mb-0 {{ 'mymessage' if message.sender == user.username else 'othermessage' }}"><span>
+                {{message.sender}}: {{ message.text }}</span>
+                <span style="position: absolute; right: 10px; top: 50%; ">{{ message.time|convert_time }}</span>
+                </div>
+  
+            </div> 
+            {% endfor %}
+            
+            
+        </ul> 
+        </form>
+        <div class="col col-lg-8">
+          <div class="card-body" height="auto" max-width="500px" >
+            <form method="post" action="/friend/{{ friend }}/message">
+                <textarea  class="form-control auto-expand" name="send_message"  placeholder="Type here" ></textarea>
+                <!-- <div contenteditable="true" name="send_message" class="auto-expand p-2 w-100" style="min-height: 50px;"></div> -->
+
+                <button type="submit" class="btn btn-primary" name="message_submit">Submit</button>
+          </form>
+      </div>
+        
 </div>
+  
+
 {% endblock %}

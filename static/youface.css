@@ -25,3 +25,36 @@
         color:white
     }
 }
+.mymessage{
+    color:white;
+    background-color: blue;
+}
+.othermessage{
+    color:white;
+    background-color: gray;
+    max-width: 300px;
+
+}
+.left-oriented{
+    right:0px
+}
+.right-oriented{
+    left :  225px;
+}
+.rounded-element{
+    border-radius: 12px;
+    max-width: 300px;
+    overflow: hidden;
+    border:0px solid #fff;
+}
+.auto-expand {
+    width: 100%;
+    color:white;
+    min-height: 25px;
+    min-width: 250px;
+    max-width: 400px;
+    height: auto;
+    border: 1px solid #fff;
+    overflow-y: hidden; /* Hide vertical scrollbar */
+    resize: none; /* Prevent manual resizing */
+  }

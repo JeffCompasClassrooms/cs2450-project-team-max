@@ -1,7 +1,7 @@
 import flask
 import tinydb
 from handlers import copy
-from db import posts, users, helpers
+from db import posts, users, helpers, groups
 blueprint = flask.Blueprint("alerts", __name__)
 @blueprint.route('/request', methods=['POST'])
 def alerts():
@@ -13,7 +13,6 @@ def alerts():
     message = flask.request.form.get('alert')
 
     if username is None and password is None:
-        print('in')
         return flask.redirect(flask.url_for('login.loginscreen'))
     
     user = users.get_user(db, username, password)
@@ -22,39 +21,50 @@ def alerts():
         return flask.redirect(flask.url_for('login.loginscreen'))
     
     table = db.table('users')
+    grouptbl = db.table('groups')
     User = tinydb.Query()
-    print(name)
-    print('before')
-    friend = users.get_user_by_name(db,name)
     request = [name ,message]
-    print(request)
-    if submit =='accept':
-        print(user)
-        print(friend)
-        
-        user['friends'].append(friend['username'])
-        friend['friends'].append(user['username'])
-
-        user['pending-friends'].remove(friend['username'])
-        if request not in user['alerts']:
-            return flask.redirect(flask.url_for('login.index'))
-        user['alerts'].remove(request)
-        table.upsert(user, (User.username == user['username']) &
-                    (User.password == user['password']))
-        table.upsert(friend,(User.username == friend['username']) &
-                    (User.password == friend['password']))
-        
-        flask.flash('New friend','success`')
-    elif submit =='decline':
-        print(user)
-        print(friend)
-        user['pending-friends'].remove(name)
-        user['alerts'].remove(request)
-        table.upsert(user, (User.username == user['username']) &
+    if request[1] =='friend request':
+        friend = users.get_user_by_name(db,name)
+        if submit =='accept':
+            user['friends'].append(friend['username'])
+            friend['friends'].append(user['username'])
+            if request not in user['alerts']:
+                return flask.redirect(flask.url_for('login.index'))
+            user['alerts'].remove(request)
+            table.upsert(user, (User.username == user['username']) &
                         (User.password == user['password']))
-        table.upsert(friend,(User.username == friend['username']) &
+            table.upsert(friend,(User.username == friend['username']) &
                         (User.password == friend['password']))
-    return flask.render_template('feed.html',title=copy.title,
-            subtitle=copy.subtitle, user=user, username=username, alerts=user['alerts'], friends= users.get_user_friends(db,user))
-
-        
+            
+            flask.flash('New friend','success`')
+        elif submit =='decline':
+            user['alerts'].remove(request)
+            table.upsert(user, (User.username == user['username']) &
+                            (User.password == user['password']))
+            table.upsert(friend,(User.username == friend['username']) &
+                            (User.password == friend['password']))
+            return flask.redirect(flask.url_for('login.index'))
+    elif request[1] =='message':
+        user['alerts'].remove(request)
+        table.upsert(user, (User.username == user['username']) &
+                            (User.password == user['password']))
+    elif request[1]== 'group invite':
+        group = groups.get_group(db,name)
+        if submit =='accept':
+                group['members'].append(user['username'])
+                user['group']=group['name'] 
+                if request not in user['alerts']:
+                    return flask.redirect(flask.url_for('login.index'))
+                user['alerts'].remove(request)
+                table.upsert(user, (User.username == user['username']) &
+                            (User.password == user['password']))
+                grouptbl.upsert(group,(User.name == user['group']))
+                
+                flask.flash('joined group','success`')
+        elif submit =='decline':
+            user['alerts'].remove(request)
+            table.upsert(user, (User.username == user['username']) &
+                            (User.password == user['password']))
+            return flask.redirect(flask.url_for('login.index'))
+    return flask.redirect(flask.url_for('login.index'))

@@ -1,17 +1,23 @@
 import flask
 from handlers import copy
-from db import posts, users, helpers, groups
-UPLOAD_FOLDER = 'static/uploads/'
-blueprint = flask.Blueprint("login", __name__)
+from db import posts, users, helpers
+UPLOAD_FOLDER = 'static/uploads'
+blueprint = flask.Blueprint("profile", __name__)
 
-@blueprint.route('/loginscreen')
-def loginscreen():
+@blueprint.route('/profileScreen')
+def profileScreen():
     """Present a form to the user to enter their username and password."""
     db = helpers.load_db()
     # First check if already logged in
-    username = flask.request.cookies.get('username')
-    password = flask.request.cookies.get('password')
-    
+    fullName = flask.request.cookies.get('fullName')
+    age = flask.request.cookies.get('age')
+    instrument = flask.request.cookies.get('instrument')
+    experience = flask.request.cookies.get('experience')
+    genre = flask.request.cookies.get('genre')
+    covers = flask.request.cookies.get('covers')
+    location = flask.request.cookies.get('location')
+    travel = flask.request.cookies.get('travel')
+'''   
     if username is not None and password is not None:
         if users.get_user(db, username, password):
             # If they are logged in, redirect them to the feed page
@@ -20,29 +26,74 @@ def loginscreen():
 
     return flask.render_template('login.html', title=copy.title,
             subtitle=copy.subtitle)
+''' 
 
-@blueprint.route('/login', methods=['POST'])
-def login():
-    """Log in the user.
+@blueprint.route('/profile', methods=['POST'])
+def profile():
 
-    Using the username and password fields on the form, create, delete, or
-    log in a user, based on what button they click.
-    """
+    """Create the user profile."""
     db = helpers.load_db()
     #getting username
-    username = flask.request.form.get('username')
-    password = flask.request.form.get('password')
+    fullName = flask.request.form.get('fullName')
+    age = flask.request.form.get('age')
+    instrument = flask.request.form.get('instrument')
+    experience = flask.request.form.get('experience')
+    genre = flask.request.form.get('genre')
+    covers = flask.request.form.get('covers')
+    location = flask.request.form.get('location')
+    travel = flask.request.form.get('travel')
+
     #creating a response for login,index
     resp = flask.make_response(flask.redirect(flask.url_for('login.index')))
-    #making sure username and password is not empty
-    if username is "":
-        flask.flash("invalid username", 'danger')
+    # making sure the name section is not empty
+    if fullName is "":
+        flask.flash("Enter your name (this field is required)", 'danger')
+        return flask.redirect(flask.url_for('profile.profileScreen'))
+    resp.set_cookie('fullName', fullName)
+    
+    # making sure the age section is not empty
+    if age is "":
+        flask.flash("Enter your age (this field is required)", 'danger')
         return flask.redirect(flask.url_for('login.loginscreen'))
-    resp.set_cookie('username', username)
-    if password is "":
-        flask.flash("Invalid password", 'danger')
-        return flask.redirect(flask.url_for('login.loginscreen'))
-    resp.set_cookie('password', password)
+    resp.set_cookie('age', age)
+
+    # making sure the instrument section is not empty
+    if instrument is "":
+        flask.flash("Enter your instrument (you can list more than 1!)", 'danger')
+        return flask.redirect(flask.url_for('profile.profileScreen'))
+    resp.set_cookie('instrument', instrument)
+
+    # making sure the experience section is not empty
+    if experience is "":
+        flask.flash("Enter your experience (this field is not required, but it will help you find matches!)", 'danger')
+        return flask.redirect(flask.url_for('profile.profileScreen'))
+    resp.set_cookie('experience', experience)
+
+    # making sure the genre section is not empty
+    if genre is "":
+        flask.flash("Enter your genre (you can list more than 1!)", 'danger')
+        return flask.redirect(flask.url_for('profile.profileScreen'))
+    resp.set_cookie('genre', genre)
+
+    # making sure the covers section is not empty
+    if covers is "":
+        flask.flash("Select covers or create (this field is not required, but it will help you find matches!)", 'danger')
+        return flask.redirect(flask.url_for('profile.profileScreen'))
+    resp.set_cookie('covers', covers)
+
+    # making sure the location section is not empty
+    if location is "":
+        flask.flash("Enter your location (this field is not required, but it will help you find matches!)", 'danger')
+        return flask.redirect(flask.url_for('profile.profileScreen'))
+    resp.set_cookie('location', location)
+
+    # making sure the travel section is not empty
+    if travel is "":
+        flask.flash("Select Yes or No (this field is not required, but it will help you find matches!)", 'danger')
+        return flask.redirect(flask.url_for('profile.profileScreen'))
+    resp.set_cookie('travel', travel)
+    
+    # Save the profile information to the database
     submit = flask.request.form.get('type')
     if submit == 'Sign Up':
         if users.get_user(db, username, password) is None:
@@ -101,7 +152,7 @@ def index():
         return flask.redirect(flask.url_for('login.loginscreen'))
 
     # get the info for the user's feed
-    group = groups.get_group(db,user['group'])
+    
     friends = users.get_user_friends(db, user)
     all_posts = []
     for friend in friends + [user]:
@@ -111,7 +162,7 @@ def index():
 
     return flask.render_template('feed.html', title=copy.title,
             subtitle=copy.subtitle, user=user, username=username,
-            friends=friends, posts=sorted_posts, alerts=user['alerts'],group = user['group'])
+            friends=friends, posts=sorted_posts, alerts=user['alerts'],)
 @blueprint.route('/static/uploads/<filename>')
 def uploaded_file(filename):
     """Serve uploaded media files."""
