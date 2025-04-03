@@ -7,7 +7,7 @@ import timeago
 import tinydb
 
 # handlers
-from handlers import friends, login, posts, alerts
+from handlers import intro, friends, login, posts, alerts
 
 app = flask.Flask(__name__)
 
@@ -16,6 +16,7 @@ def convert_time(ts):
     """A jinja template helper to convert timestamps to timeago."""
     return timeago.format(ts, time.time())
 
+app.register_blueprint(intro.blueprint)
 app.register_blueprint(friends.blueprint)
 app.register_blueprint(login.blueprint)
 app.register_blueprint(posts.blueprint)

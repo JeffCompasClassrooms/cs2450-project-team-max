@@ -36,7 +36,7 @@ def login():
     resp = flask.make_response(flask.redirect(flask.url_for('login.index')))
     #making sure username and password is not empty
     if username is "":
-        flask.flash("invaliud username", 'danger')
+        flask.flash("Invalid username", 'danger')
         return flask.redirect(flask.url_for('login.loginscreen'))
     resp.set_cookie('username', username)
     if password is "":
@@ -85,7 +85,7 @@ def logout():
     resp.set_cookie('password', '', expires=0)
     return resp
 
-@blueprint.route('/')
+@blueprint.route('/index')
 def index():
     """Serves the main feed page for the user."""
     db = helpers.load_db()
@@ -101,7 +101,7 @@ def index():
         return flask.redirect(flask.url_for('login.loginscreen'))
 
     # get the info for the user's feed
-    
+    print(user)
     friends = users.get_user_friends(db, user)
     all_posts = []
     for friend in friends + [user]:
