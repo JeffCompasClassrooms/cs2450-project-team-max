@@ -6,8 +6,8 @@ import time
 import flask
 
 app = flask.Flask(__name__)
-# Specify the path to ChromeDriver
-chrome_driver_path = "/opt/homebrew/bin/chromedriver" #you'll need to put the path to YOUR chromedriver here
+# Specify the patath to ChromeDriver
+chrome_driver_pa = "/opt/homebrew/bin/chromedriver" #you'll need to put the path to YOUR chromedriver here
 driver = webdriver.Chrome()
 driver.executable_path=chrome_driver_path
 

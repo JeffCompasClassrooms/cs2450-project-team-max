@@ -1,7 +1,7 @@
 import flask
 from handlers import copy
-from db import posts, users, helpers
-
+from db import posts, users, helpers, groups
+UPLOAD_FOLDER = 'static/uploads/'
 blueprint = flask.Blueprint("login", __name__)
 
 @blueprint.route('/loginscreen')
@@ -36,7 +36,7 @@ def login():
     resp = flask.make_response(flask.redirect(flask.url_for('login.index')))
     #making sure username and password is not empty
     if username is "":
-        flask.flash("Invalid username", 'danger')
+        flask.flash("invalid username", 'danger')
         return flask.redirect(flask.url_for('login.loginscreen'))
     resp.set_cookie('username', username)
     if password is "":
@@ -97,11 +97,11 @@ def index():
         return flask.redirect(flask.url_for('login.loginscreen'))
     user = users.get_user(db, username, password)
     if not user:
-        flask.flash('Invalid credentials. Please try again.', 'danger')
+        flask.flash("Invalid credentials. If you're new, click the sign up button to become a member.", 'danger')
         return flask.redirect(flask.url_for('login.loginscreen'))
 
     # get the info for the user's feed
-    print(user)
+    group = groups.get_group(db,user['group'])
     friends = users.get_user_friends(db, user)
     all_posts = []
     for friend in friends + [user]:
@@ -111,4 +111,9 @@ def index():
 
     return flask.render_template('feed.html', title=copy.title,
             subtitle=copy.subtitle, user=user, username=username,
-            friends=friends, posts=sorted_posts, alerts=user['alerts'])
+            friends=friends, posts=sorted_posts, alerts=user['alerts'],group = user['group'])
+@blueprint.route('/static/uploads/<filename>')
+def uploaded_file(filename):
+    """Serve uploaded media files."""
+
+    return flask.send_from_directory(UPLOAD_FOLDER, filename)

@@ -2,7 +2,7 @@
 
 {% block content %}
 <div class="row justify-content-md-center mb-4">
-  <h1 class="">Welcome, {{username}}!</h1>
+  <h1 class="">Welcome, {{ username }}!</h1>
 </div>
 
 <div class="row justify-content-md-center">
@@ -11,15 +11,16 @@
     <div class="card bg-light mb-3">
       <div class="card-body">
         <h3 class="card-title">New Post</h3>
-        <form method="post" action="/post">
-          <div class="form-group">
-            <textarea class="form-control" name="post" rows="3" placeholder="What's on your mind?"></textarea>
+        <form method="post" action="/post" enctype="multipart/form-data">
+          <div class="chatForm">
+            <textarea class="form-control" id="post" name="post" rows="3" placeholder="What's on your mind?"></textarea>
+            <input type="file" id="mediaUpload" name="media" accept="image/*,video/*,audio/*">
+            <button class="form-control btn btn-primary" type="submit" name="post-submit">Submit</button>
           </div>
-          <button type="submit" class="btn btn-primary" name="post-submit">Submit</button>
         </form>
       </div>
     </div>
-
+    <div class="chatBox">
     <h2 class="">My Feed</h2>
     {% for post in posts %}
     <div class="card bg-light">
@@ -27,13 +28,30 @@
         <h4 class="card-title">{{ post.user }}</h4>
         <h6 class="card-subtitle mb-2 text-muted">{{ post.time|convert_time }}</h6>
         <p class="card-text">{{ post.text }}</p>
+        {% if post.media_url %}
+          {% if post.media_type == 'audio' %}
+          <audio controls>
+            <source src="{{post.media_url}}" type="{{post_type}}">
+          </audio>
+          {% elif post.media_type == 'video' %}
+          <video width="500px" height="300px" controls>
+            <source src="{{ post.media_url }}" type="{{post.type}}"> 
+           </video>
+          {% else %}
+          <img src="{{post.media_url}}" width="500px" height="300px">
+
+          {% endif %}
+        {% endif %}
       </div>
     </div>
     {% endfor %}
   </div>
+  </div>
+  
+  
 
-  <div class="col col-lg-3">
-    <div class="card bg-light mb-3">
+  <div class="col col-lg-3"  >
+    <div class="card bg-light mb-3" >
       <div class="card-body">
         <h3 class="card-title">Add Friend</h3>
         <form method="post" action="/addfriend">
@@ -45,7 +63,7 @@
       </div>
     </div>
     
-    <div class="card bg-light">
+    <div class="card bg-light mb-3" >
       <div class="card-body">
         <h3 class="card-title">My Friends</h3>
         {% if friends %}
@@ -55,41 +73,132 @@
             {% endfor %}
           </ul>
         {% else %}
-          <p class="card-text">
-            Sorry, no friends!
-          </p>
+          <p class="card-text">Sorry, no friends!</p>
         {% endif %}
       </div>
     </div>
+
     {% if alerts %}
-    
-    <div class="card bg-light">
+    <div class="card bg-light mb-3">
       <div class="card-body">
         <form method="post" action="/request">
           <h3 class="card-title">Alerts</h3>
           <ul>
-            {% for types, message in alerts%}
-            <div class="alert alert-{{ types }}">{{ message }}</div>
+            {% for types, message in alerts %}
               <div>
-                <li><p>{{ types }}</p>
+                <li>
                   <div class="form-group">
+                    {% if message == 'friend request' %}
                     <input type="hidden" name="name" value="{{ types }}">
                     <input type="hidden" name="alert" value="{{ message }}">
-                    <input class="btn btn-primary" type="submit" name="type" value="accept" >
+                    <p class="card-text">{{message }} from {{types}}</p> 
+                    <input class="btn btn-primary" type="submit" name="type" value="accept">
                     <input class="btn btn-success" type="submit" name="type" value="decline">
-                    
-                </div>
-                </li></div>
-              {% endfor %}
-          </ul> 
+                    {% elif message == 'message' %}
+                    <input type="hidden" name="name" value="{{ types }}">
+                    <input type="hidden" name="alert" value="{{ message }}">
+                    <p class="card-text">{{message }} from {{types}}</p> 
+                    {% elif message == 'group invite' %}
+                    <input type="hidden" name="name" value="{{ types }}">
+                    <input type="hidden" name="alert" value="{{ message }}">
+                    <p class="card-text">{{message }} from {{types}}</p> 
+                    <input class="btn btn-primary" type="submit" name="type" value="accept">
+                    <input class="btn btn-success" type="submit" name="type" value="decline">
+                    {% endif %}
+                  </div>
+                </li>
+              </div>
+            {% endfor %}
+          </ul>
+        </form>
+      </div>
+    </div>
+    {% endif %}
+    <div class="card bg-light mb-3" style="column-gap: 10px;">
+      <div class="card-body">
+        {%if group %}
+        <h3 class="card-title">group {{group}}</h3>
+          <ul>   
+            <div>
+              <li><a href="/group/{{ group }}"> {{ group }}</a></li>
               
+            </div>
+            
+          </ul>
+          <form method="post" action="/add_member">
+            <div class="form-group mb-1">
+              <p>invite a friend</p>
+              <input type="text" class="form-control" name="iname" />
+            </div>
+            <button type="submit" class="form-control btn btn-primary" name="add_member">Submit</button>
           </form>
-
-        
-          
         {% else %}
-          
+        <p class="card-text">Sorry, You're not in a group!</p>
+         
+            <div class="card-body">
+              <h3 class="card-title">Make Group</h3>
+              <form method="post" action="/makegroup">
+                <div class="form-group mb-1">
+                  <input type="text" class="form-control" name="gname" placeholder="group name" />
+                </div>
+                <button type="submit" class="form-control btn btn-primary" name="makegroup">Submit</button>
+              </form>
+              
+            </div>
+
         {% endif %}
-  </div>
+      </div>
+    </div>
+    
+    
+    </div>  
   
+  </div>
+</div>
+
 {% endblock %}
+
+<!-- Moved the script outside of the form -->
+<script>
+  document.getElementById("chatForm").addEventListener("submit", async function(event) {
+      event.preventDefault();
+      let message = document.getElementById("post").value;
+      let fileInput = document.getElementById("mediaUpload");
+      console.log(fileInput);
+      let formData = new FormData();
+      formData.append("post", message);
+      if (fileInput.files.length > 0) {
+          formData.append("media", fileInput.files[0]);
+      }
+      
+      let response = await fetch("/post", {
+          method: "POST",
+          body: formData
+      });
+
+      let result = await response.json();
+      let chatBox = document.getElementById("chatBox");
+
+      let newMessage = document.createElement("p");
+      newMessage.textContent = result.message;
+      chatBox.appendChild(newMessage);
+
+      if (result.media_url) {
+          if (result.is_video) {
+              let video = document.createElement("video");
+              video.src = result.media_url;
+              video.controls = true;
+              video.style.maxWidth = "300px";
+              chatBox.appendChild(video);
+          } else {
+              let img = document.createElement("img");
+              img.src = result.media_url;
+              img.style.maxWidth = "200px";
+              img.style.display = "block";
+              chatBox.appendChild(img);
+          }
+      }
+
+      document.getElementById("chatForm").reset();
+  });
+</script>

@@ -11,8 +11,31 @@ def new_user(db, username, password):
             'friends': [],
             'pending-friends':[],
             'alerts':[],
+            'group':None
             }
     return users.insert(user_record)
+
+def user_profile(db, fullName, age, instrument, experience, genre, covers, location, travel):
+    """
+    Create a new user profile in the database.
+    """
+    users = db.table('users')
+    User = tinydb.Query()
+    
+    # Create a new user profile record
+    user_profile_record = {
+            'fullName': fullName,
+            'age': age,
+            'instrument': instrument,
+            'experience': experience,
+            'genre': genre,
+            'covers': covers,
+            'location': location,
+            'travel': travel
+            }
+    
+    # Update the user profile in the database
+    return users.upsert(user_profile_record, User.username == fullName)
 
 def get_user(db, username, password):
     users = db.table('users')
@@ -32,20 +55,15 @@ def delete_user(db, username, password):
             (User.password == password))
 
 def add_user_friend(db, user, friend):
-    print('in')
     users = db.table('users')
     User = tinydb.Query()
-    print(friend)
-    print(user)
-    if friend not in user['friends'] and friend['username'] is not user['username']:
-        if users.get(User.username == friend['username']):
-            friend['pending-friends'].append(user['username'])
+    if users.get(User.username == friend['username']):
+        if friend not in user['friends'] and friend['username'] is not user['username']:
             friend['alerts'].append([ user['username'],'friend request'])
             users.upsert(user, (User.username == user['username']) &
                     (User.password == user['password']))
             users.upsert(friend,(User.username == friend['username']) &
                     (User.password == friend['password']))
-        
             return 'Friend {} added successfully!'.format(friend['username']), 'success'
         return 'User {} does not exist.'.format(friend['username']), 'danger'
     return 'You are already friends with {}.'.format(friend['username']), 'warning'

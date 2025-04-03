@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+{% extends "base.html" %}
+{% block title %}Create Profile{% endblock %}
+
+{% block content %}
+
+# call the css for this page
+<head><link rel="stylesheet" href="{{ url_for('static', filename='profile.css') }}"></head>
+
+<div class="row">
+  <div class="col-sm-6 mx-auto">
+    <div class="card card-body bg-light">
+      <form method="post" action="/createprofile">
+        <fieldset>
+          <legend>Create Profile</legend>
+          <hr />
+          <div class="form-group">
+            <label for="fullName">Enter your name</label>
+            <input type="text" class="form-control" name="name">
+          </div>
+          <div class="form-group">
+            <label for="age">Enter your age</label>
+            <input type="text" class="form-control" name="age">
+          </div>
+          <div class="form-group">
+            <label for="instrument">What instrument(s) do you play?</label>     # should be able to list multiple instruments
+            <input type="text" class="form-control" name="instrument">
+          </div>
+          <div class="form-group">
+            <label for="experience">How many years of experience do you have with your instrument(s)?</label>
+            <input type="password" class="form-control" name="experience">
+          </div>
+          <div class="form-group">
+            <label for="genre">What genres do you play?</label>
+            <input type="text" class="form-control" name="genre">
+          </div>
+          <div class="form-group">
+            <label for="covers">Do you intend to create new music or perform cover songs?</label>
+            <input type="text" class="form-control" name="covers">
+          </div>
+          <div class="form-group">
+            <label for="location">Where do you live?</label>
+            <input type="password" class="form-control" name="location">
+          </div>
+          <div class="form-group">
+            <label for="travel">Are you willing to travel?</label>
+            <input type="password" class="form-control" name="travel">
+          </div>
+          <div class="form-group">
+            <input class="btn btn-primary" type="submit" name="type" value="save">
+            <input class="btn btn-success" type="submit" name="type" value="cancel">
+            <!-- <input class="btn btn-danger" type="submit" name="type" value="Delete"> -->
+          </div>
+        </fieldset>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
