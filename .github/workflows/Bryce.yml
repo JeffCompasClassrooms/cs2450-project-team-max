@@ -55,7 +55,7 @@ jobs:
 =======
       - name: Run Selenium BryceTests
         run: |
-          pytest tests/BryceTests -v
+          python tests/BryceTests
 
       - name: Upload Flask logs if tests fail
         if: ${{ failure() }}
