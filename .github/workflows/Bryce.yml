@@ -36,7 +36,8 @@ jobs:
           nohup python youface.py > flask.log 2>&1 & 
           echo $! > flask.pid
           sleep 10
-          cat flask.log
+          tail -n 20 flask.log  # Show last 20 lines of the log for debugging
+          #cat flask.log
 
       - name: Run Selenium BryceTests
         run: |
