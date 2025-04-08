@@ -1,7 +1,10 @@
 import flask
 from handlers import copy
-from db import posts, users, helpers
-
+from db import posts, users, helpers, groups
+import os
+import requests
+import math
+UPLOAD_FOLDER = os.path.abspath('static/uploads/')
 blueprint = flask.Blueprint("login", __name__)
 
 @blueprint.route('/loginscreen')
@@ -32,14 +35,22 @@ def login():
     #getting username
     username = flask.request.form.get('username')
     password = flask.request.form.get('password')
+    latitude = flask.request.form.get('latitude')
+    longitude = flask.request.form.get('longitude')
+    print(latitude)
+    print(longitude)
+    longitude = float(longitude)
+    latitude = float(latitude)
+   
     #creating a response for login,index
     resp = flask.make_response(flask.redirect(flask.url_for('login.index')))
     #making sure username and password is not empty
-    if username is "":
-        flask.flash("invaliud username", 'danger')
+    
+    if username == "":
+        flask.flash("invalid username", 'danger')
         return flask.redirect(flask.url_for('login.loginscreen'))
     resp.set_cookie('username', username)
-    if password is "":
+    if password == "":
         flask.flash("Invalid password", 'danger')
         return flask.redirect(flask.url_for('login.loginscreen'))
     resp.set_cookie('password', password)
@@ -56,7 +67,7 @@ def login():
                     return flask.redirect(flask.url_for('login.loginscreen'))
            
             flask.flash('User {} created successfully!'.format(username), 'success')
-            users.new_user(db,username,password)
+            users.new_user(db,username,password,latitude,longitude)
             resp.set_cookie('password',password)
             resp.set_cookie('username',password)
             return flask.redirect(flask.url_for('login.loginscreen'))
@@ -75,6 +86,8 @@ def login():
 
     return resp
 
+
+
 @blueprint.route('/logout', methods=['POST'])
 def logout():
     """Log out the user."""
@@ -89,7 +102,7 @@ def logout():
 def index():
     """Serves the main feed page for the user."""
     db = helpers.load_db()
-
+   
     # make sure the user is logged in
     username = flask.request.cookies.get('username')
     password = flask.request.cookies.get('password')
@@ -97,16 +110,27 @@ def index():
         return flask.redirect(flask.url_for('login.loginscreen'))
     user = users.get_user(db, username, password)
     if not user:
-        flask.flash('Invalid credentials. Please try again.', 'danger')
+        flask.flash("Invalid credentials. If you're new, click the sign up button to become a member.", 'danger')
         return flask.redirect(flask.url_for('login.loginscreen'))
 
+   
     # get the info for the user's feed
+    group = groups.get_group(db,user['group'])
+    friends = users.get_user_friends(db, user)
+    all_users =users.get_all_users(db,user)
+    print(all_users)
+    threshold_meters = 10000
+    filtered_users = [
+        u for u in all_users 
+        if is_near(user['latitude'], user['longitude'], u['latitude'], u['longitude'], threshold_meters)
+    ]
     
     # Sort the remaining users by distance to the logged-in user
     filtered_sorted_users = sorted(
         filtered_users,
         key=lambda u: is_near(user['latitude'], user['longitude'], u['latitude'], u['longitude'])
     )
+    print('in')
     print(filtered_sorted_users)
     all_posts = []
     for friend in friends + [user]:
@@ -116,4 +140,33 @@ def index():
 
     return flask.render_template('feed.html', title=copy.title,
             subtitle=copy.subtitle, user=user, username=username,
-            friends=friends, posts=sorted_posts, alerts=user['alerts'])
+            friends=friends, posts= sorted_posts,all_users =filtered_sorted_users, alerts=user['alerts'],group = user['group'])
+
+def is_near(lat1, lon1, lat2, lon2, threshold_meters=1000):
+    # Radius of Earth in meters
+    R = 6371000
+
+    # Convert degrees to radians
+    l1 = math.radians(lat1)
+    l2 = math.radians(lat2)
+    l3 = math.radians(lat2 - lat1)
+    l4 = math.radians(lon2 - lon1)
+
+    # Haversine formula
+    a = math.sin(l3 / 2)**2 + math.cos(l1) * math.cos(l2) * math.sin(l4 / 2)**2
+    c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
+    distance = R * c
+
+    # Debugging: print the distance and threshold
+    print(f"Distance between ({lat1}, {lon1}) and ({lat2}, {lon2}) = {distance} meters")
+    print(f"Threshold: {threshold_meters} meters")
+
+    return distance <= threshold_meters
+
+@blueprint.route('/static/uploads/<filename>')
+def uploaded_file(filename):
+    print("in")
+    """Serve uploaded media files."""
+
+    return flask.send_from_directory(UPLOAD_FOLDER, filename)
+

@@ -1,12 +1,6 @@
-<!DOCTYPE html>
 {% extends "base.html" %}
-{% block title %}Create Profile{% endblock %}
 
 {% block content %}
-
-# call the css for this page
-<head><link rel="stylesheet" href="{{ url_for('static', filename='profile.css') }}"></head>
-
 <div class="row">
   <div class="col-sm-6 mx-auto">
     <div class="card card-body bg-light">
@@ -47,7 +41,7 @@
             <input type="password" class="form-control" name="travel">
           </div>
           <div class="form-group">
-            <input class="btn btn-primary" type="submit" name="type" value="save">
+            <input class="btn btn-primary" type="submit" name="type" value="Save/Finish creating profile">
             <input class="btn btn-success" type="submit" name="type" value="cancel">
             <!-- <input class="btn btn-danger" type="submit" name="type" value="Delete"> -->
           </div>

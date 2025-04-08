@@ -1,6 +1,7 @@
 import flask
-
+import tinydb
 from handlers import copy
+from handlers import posts as Posts
 from db import posts, users, helpers, messages
 
 blueprint = flask.Blueprint("friends", __name__)
@@ -30,19 +31,14 @@ def addfriend():
     if name== user['username']:
         flask.flash("cannot add self",'danger')
         return flask.redirect(flask.url_for('login.index'))
-    if name in user['pending-friends']:
+    if name in user['alerts']:
         flask.flash("friend request pending",'danger')
         return flask.redirect(flask.url_for('login.index'))
     if name in user['friends']:
         flask.flash("already friends",'danger')
         return flask.redirect(flask.url_for('login.index'))
     friend = users.get_user_by_name(db,name)
-    print("friend is " )
-    print(friend)
-    print("done")
-    
     msg, category = users.add_user_friend(db, user, friend)
-    
     flask.flash(msg, category)
     return flask.redirect(flask.url_for('login.index'))
 
@@ -65,11 +61,12 @@ def unfriend():
     flask.flash(msg, category)
     return flask.redirect(flask.url_for('login.index'))
 
-@blueprint.route('/friend/<fname>')
+@blueprint.route('/<fname>')
 def view_friend(fname):
     """View the page of a given friend."""
     db = helpers.load_db()
-
+    table = db.table('users')
+    User = tinydb.Query()
     username = flask.request.cookies.get('username')
     password = flask.request.cookies.get('password')
 
@@ -79,15 +76,20 @@ def view_friend(fname):
         return flask.redirect(flask.url_for('login.loginscreen'))
 
     friend = users.get_user_by_name(db, fname)
-    print(friend)
-    all_posts = posts.get_posts(db, friend) # reverse order
     all_message =messages.get_messages(db,user,friend)
-
+    request = [fname ,'message']
+    if request in user['alerts']:
+        user['alerts'].remove(request)
+        table.upsert(user, (User.username == user['username']) &
+                        (User.password == user['password']))
+    all_posts = posts.get_posts(db, friend)[::-1]
+    # sort posts
+    sorted_posts = sorted(all_posts, key=lambda post: post['time'], reverse=True)
     return flask.render_template('friend.html', title=copy.title,
             subtitle=copy.subtitle, user=user, username=username,
             friend=friend['username'],
-            friends=users.get_user_friends(db, user), posts=all_posts, all_messages=all_message)
-@blueprint.route('/friend/<fname>/message',methods=['POST'])
+            friends=users.get_user_friends(db, user), posts=all_posts, all_messages=all_message,alerts=user['alerts'])
+@blueprint.route('/<fname>/message',methods=['POST'])
 def send_message(fname):
     db =helpers.load_db()
     username = flask.request.cookies.get('username')
@@ -100,15 +102,16 @@ def send_message(fname):
 
     friend = users.get_user_by_name(db, fname)
     text= flask.request.form.get('send_message')
-    all_message =messages.get_messages(db,user,friend)
-    if text == "":
-        flask.flash('Must have a message to send', 'danger')
-        return flask.redirect(flask.url_for('friends.view_friend',fname = fname))
     print(text)
-    print(all_message)
+    all_message =messages.get_messages(db,user,friend)
+    if text == "" or text == None:
+        flask.flash('Must have a message to send', 'danger')
+        
+        return flask.redirect(flask.url_for('friends.view_friend',fname = fname))
+
     messages.message(db,user,friend,text)
-    return flask.render_template('friend.html', title=copy.title,
-        subtitle=copy.subtitle, user=user, username=username,
-        friend=friend['username'],
-        friends=users.get_user_friends(db, user), all_messages=all_message)
-    
+    table = db.table('users')
+    User = tinydb.Query()
+    table.upsert(friend,(User.username == friend['username']) &
+                        (User.password == friend['password']))
+    return flask.redirect(flask.url_for('friends.view_friend',fname = fname))
