@@ -1,7 +1,7 @@
 import flask
 from handlers import copy
 from db import users, helpers
-UPLOAD_FOLDER = 'static/uploads'
+UPLOAD_FOLDER = 'static/uploads/'
 blueprint = flask.Blueprint("profile", __name__)
 
 @blueprint.route('/profileScreen')
