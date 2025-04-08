@@ -6,10 +6,25 @@ import time
 import flask
 
 app = flask.Flask(__name__)
-# Specify the patath to ChromeDriver
-chrome_driver_path = "/opt/homebrew/bin/chromedriver" #you'll need to put the path to YOUR chromedriver here
-driver = webdriver.Chrome()
-driver.executable_path=chrome_driver_path
+# Specify the path to ChromeDriver
+
+# chrome_driver_path = "/opt/homebrew/bin/chromedriver" #you'll need to put the path to YOUR chromedriver here
+
+chrome_options = Options()
+chrome_options.add_argument("--no-sandbox")
+chrome_options.add_argument("--headless")
+
+chrome_options.add_experimental_option("prefs", {
+    "profile.default_content_setting_values.geolocation": 1
+})
+driver = webdriver.Chrome(options=chrome_options)
+
+driver.execute_cdp_cmd("Emulation.setGeolocationOverride", {
+    "latitude": 37.1011711,
+    "longitude": -113.5678041,
+    "accuracy": 100
+})
+# driver.executable_path=chrome_driver_path
 
 try:
     driver.get("http://localhost:5000/loginscreen")

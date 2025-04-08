@@ -4,7 +4,7 @@ on:
   push:
     branches: [Bryce]
   pull_request:
-    branches: [Bryce]
+    branches: [main]
 
 jobs:
   test:
@@ -27,18 +27,17 @@ jobs:
 
     - name: Install dependencies
       run: |
-        python -m venv pythonvenv
-        source pythonvenv/bin/activate
         pip install -r requirements.txt
+        pip install selenium
 
-    - name: Start Flask App
+    - name: Start Flask App in background
       run: |
-        source pythonvenv/bin/activate
-        export FLASK_APP=app.py
-        flask run --host=0.0.0.0 &
-        sleep 5
+        nohup python youface.py > flask.log 2>&1 &
+        sleep 10
 
     - name: Run Selenium Tests
+      env:
+        SELENIUM_REMOTE_URL: http://localhost:4444/wb/hub
       run: |
-        source pythonvenv/bin/activate
-        python tests/BryceTests
+        python tests/BryceTests.py
+  

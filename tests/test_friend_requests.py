@@ -5,6 +5,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 import time
 import flask
+import unittest
 
 app = flask.Flask(__name__)
 # Specify the path to ChromeDriver
