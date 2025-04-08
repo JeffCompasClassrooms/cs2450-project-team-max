@@ -90,3 +90,30 @@ def get_user_friends(db, user):
     for friend in user['friends']:
         friends.append(users.get(User.username == friend))
     return friends
+def update_password(db, username, new_password):
+    """Updates the password for a user."""
+    users_table = db.table('users')
+    User = tinydb.Query()
+
+    # Debug: Check if the user exists
+    user = users_table.get(User.username == username)
+    if not user:
+        print(f"User with username '{username}' not found.")
+        return 0  # No records updated
+
+    # Perform the update
+    result = users_table.update({'password': new_password}, User.username == username)
+    print(f"Password update result for username '{username}': {result}")
+    return result  # Returns the number of updated records
+def update_user(db, user):
+    """Updates a user's information in the database."""
+    users_table = db.table('users')
+    User = tinydb.Query()
+    result = users_table.update({'username': user['username']}, User.username == user['old_username'])
+    return result  # Returns the number of updated records
+def delete_user(db, username):
+    """Deletes a user from the database."""
+    users_table = db.table('users')
+    User = tinydb.Query()
+    result = users_table.remove(User.username == username)
+    return result  # Returns the number of deleted records
