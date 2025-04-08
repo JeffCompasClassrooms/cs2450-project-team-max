@@ -2,14 +2,21 @@ from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.options import Options
 import time
 import flask
 
 app = flask.Flask(__name__)
 # Specify the path to ChromeDriver
-chrome_driver_path = "/opt/homebrew/bin/chromedriver" #you'll need to put the path to YOUR chromedriver here
-driver = webdriver.Chrome()
-driver.executable_path=chrome_driver_path
+
+# chrome_driver_path = "/opt/homebrew/bin/chromedriver" #you'll need to put the path to YOUR chromedriver here
+
+chrome_options = Options()
+chrome_options.add_argument("--no-sandbox")
+chrome_options.add_argument("--headless")
+
+driver = webdriver.Chrome(options=chrome_options)
+# driver.executable_path=chrome_driver_path
 
 try:
     print('in')
