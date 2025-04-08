@@ -68,9 +68,10 @@ class TestLikeButton(unittest.TestCase):
         wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "input[type='submit'][value='Submit']"))).click()
         time.sleep(2)
         old_url = driver.current_url
-        wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "input[type='submit'][value='Logout']"))).click()
-        
-       
+        logout = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "input[type='submit'][value='Logout']")))
+        driver.execute_script("arguments[0].scrollIntoView(true);", logout)
+        time.sleep(0.5)  # Give time after scroll
+        logout.click()
         WebDriverWait(driver, 10).until(EC.url_changes(old_url))
 
         old_url = driver.current_url
