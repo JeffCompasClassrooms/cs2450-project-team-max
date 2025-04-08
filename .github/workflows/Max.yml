@@ -39,5 +39,4 @@ jobs:
       env:
         SELENIUM_REMOTE_URL: http://localhost:4444/wb/hub
       run: |
-        source pythonvenv/bin/activate
-        python tests/test_friend_requests.
+        python tests/test_friend_requests.py
