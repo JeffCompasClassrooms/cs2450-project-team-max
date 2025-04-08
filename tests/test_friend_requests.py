@@ -71,6 +71,11 @@ class TestLikeButton(unittest.TestCase):
         driver.execute_script("window.scrollTo(0, 0);")
         time.sleep(1)
 
+        try:
+            WebDriverWait(driver, 3).until(EC.presence_of_element_located((By.CLASS_NAME, "navbar-toggler collapsed"))).click()
+        except e:
+            pass
+
         wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "input[type='submit'][value='Logout']"))).click()
         WebDriverWait(driver, 10).until(EC.url_changes(old_url))
 
