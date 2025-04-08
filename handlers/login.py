@@ -7,6 +7,8 @@ import math
 UPLOAD_FOLDER = os.path.abspath('static/uploads/')
 blueprint = flask.Blueprint("login", __name__)
 
+
+
 @blueprint.route('/loginscreen')
 def loginscreen():
     """Present a form to the user to enter their username and password."""
@@ -35,17 +37,18 @@ def login():
     #getting username
     username = flask.request.form.get('username')
     password = flask.request.form.get('password')
-    latitude = flask.request.form.get('latitude')
-    longitude = flask.request.form.get('longitude')
-    print(latitude)
-    print(longitude)
+    response = requests.get("https://ipinfo.io")
+    location = response.json()
+    loc = location['loc']
+    latitude, longitude = loc.split(",")
+    
     longitude = float(longitude)
     latitude = float(latitude)
-   
+    print(latitude)
+    print(longitude)
     #creating a response for login,index
     resp = flask.make_response(flask.redirect(flask.url_for('login.index')))
     #making sure username and password is not empty
-    
     if username == "":
         flask.flash("invalid username", 'danger')
         return flask.redirect(flask.url_for('login.loginscreen'))

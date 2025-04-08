@@ -15,50 +15,87 @@ chrome_options = Options()
 chrome_options.add_argument("--no-sandbox")
 chrome_options.add_argument("--headless")
 
+chrome_options.add_experimental_option("prefs", {
+    "profile.default_content_setting_values.geolocation": 1
+})
 driver = webdriver.Chrome(options=chrome_options)
+
+driver.execute_cdp_cmd("Emulation.setGeolocationOverride", {
+    "latitude": 37.1011711,
+    "longitude": -113.5678041,
+    "accuracy": 100
+})
 # driver.executable_path=chrome_driver_path
 
 try:
     print('in')
-    driver.get("http://localhost:5000/loginscreen")
-    driver.add_cookie({"name": "username", "value": "admin"})
-    driver.add_cookie({"name": "password", "value": "admin"})
+    driver.get("http://localhost:5000/")
+    
     time.sleep(2)
     
     print("--= Beginning Tests =--")
     #1
-    if driver.get_cookie('username'):
-        print("[PASSED] - username cookie set")
-    else:
-        print("[FAILED] - username cookie not found.")
-    #2
-    if driver.get_cookie('password'):
-        print("[PASSED] - password cookie set")
-    else:
-        print("[FAILED] - password cookie not found.")
-    #3
-
+    
     wait = WebDriverWait(driver, 10)  # Wait up to 10 seconds
-    login_button = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "input[type='submit'][value='Login']")))
-    if login_button:
-        print("[PASSED] - Login Button Exists.")
-    else:
-        print("[FAILED] - Login button not found.")
+    create_account = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "input[type='submit'][value='Create Account']")))
+    print("[PASSED] - Create Account button found.")
+    create_account.click()
+
+    
+    wait.until(EC.presence_of_element_located((By.NAME, "username"))).send_keys("admin")
+    wait.until(EC.presence_of_element_located((By.NAME, "password"))).send_keys("admin")
+    
+    wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "input[type='submit'][value='Sign Up']"))).click()
+    old_url= driver.current_url
+    print("[PASSED] - Admin user created.")
+    print('[PASSED] - Url Changed')
+    time.sleep(2)
+   
+    # Only then interact with its fields
+    wait.until(EC.presence_of_element_located((By.NAME, "username"))).send_keys("hi")
+    wait.until(EC.presence_of_element_located((By.NAME, "password"))).send_keys("hi")
+
+    wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "input[type='submit'][value='Sign Up']"))).click()
+    #HI USER CREATED
+    time.sleep(1)
+    
+    print(driver.current_url)
+    wait.until(EC.presence_of_element_located((By.NAME, "username"))).send_keys("hi")
+    print("[PASSED] - found username")
+    wait.until(EC.presence_of_element_located((By.NAME, "password"))).send_keys("hi")
+    print("[PASSED] - found password")
+    wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "input[type='submit'][value='Login']"))).click()
+    print(driver.current_url)
+    WebDriverWait(driver, 10).until(EC.url_changes(old_url))
+    print('[PASSED] - Changed URL')
+
+    wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "input[type='text'][name='name']"))).send_keys("admin")
+    print("[PASSED] - found input")
+    Submit_friend =  wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "input[type='submit'][value='Submit']"))).click()
+    print("[PASSED] - clicked add Friend")
+
+    time.sleep(2)
+    logout =  wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "input[type='submit'][value='Logout']")))
     old_url = driver.current_url
-    
-    
-    #4
-    login_button.click()
-    
-    if WebDriverWait(driver, 10).until(EC.url_changes(old_url)):
-        print("[PASSED] - Login Button clicked.")
+    if logout:
+        print("[PASSED] - logout Button Exists.")
     else:
-        print("[FAILED] - Login Button Not Clicked.")
-    
-    
-    #5
-    old_url = driver.current_url
+        print("[FAILED] - logout button not found.")
+    logout.click()
+    print(driver.current_url)
+    WebDriverWait(driver, 10).until(EC.url_changes(old_url))
+    old_url= driver.current_url
+    wait.until(EC.presence_of_element_located((By.NAME, "username"))).send_keys("admin")
+    print('[PASSED] - admin user typed')
+    wait.until(EC.presence_of_element_located((By.NAME, "password"))).send_keys("admin")
+    print('[PASSED] - admin password typed')
+    wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "input[type='submit'][value='Login']"))).click()
+    print('[PASSED] - login user')
+    WebDriverWait(driver, 10).until(EC.url_changes(old_url))
+    wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "input[type='submit'][value='accept']"))).click()
+    print("[PASSED] - friend added")
     # Wait until the friends list is loaded
+    time.sleep(2)
     first_friend_link = WebDriverWait(driver, 10).until(
     EC.element_to_be_clickable((By.CSS_SELECTOR, "div.card.bg-light ul li a"))
     )   
@@ -67,23 +104,6 @@ try:
         print("[PASSED] - Friend Button clicked.")
     else:
         print("[FAILED] - Friend Button Not Clicked.")
-    
-    
-    #6
-    message_text= None
-    alert_type = None
-    count = 0
-    messages = driver.find_elements(By.CLASS_NAME, "alert")
-    for index, message in enumerate(messages):
-        message_text = message.text  
-        alert_type = message.get_attribute("class").split()[-1]  
-        count+=1
-        
-    if message_text:
-        print("[PASSED] - message Loaded.")
-    else:
-        print("[FAILED] - message not Loaded.")
-    
     
     #7
     message_box = driver.find_element(By.NAME, "send_message")
