@@ -85,7 +85,7 @@ def logout():
     resp.set_cookie('password', '', expires=0)
     return resp
 
-@blueprint.route('/')
+@blueprint.route('/index')
 def index():
     """Serves the main feed page for the user."""
     db = helpers.load_db()
@@ -102,7 +102,12 @@ def index():
 
     # get the info for the user's feed
     
-    friends = users.get_user_friends(db, user)
+    # Sort the remaining users by distance to the logged-in user
+    filtered_sorted_users = sorted(
+        filtered_users,
+        key=lambda u: is_near(user['latitude'], user['longitude'], u['latitude'], u['longitude'])
+    )
+    print(filtered_sorted_users)
     all_posts = []
     for friend in friends + [user]:
         all_posts += posts.get_posts(db, friend)
