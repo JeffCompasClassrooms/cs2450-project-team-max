@@ -1,0 +1,7 @@
+{
+    "California": ["Los Angeles", "San Diego", "San Francisco"],
+    "Utah": ["Salt Lake City", "St. George", "Provo"],
+    "Idaho": ["Boise", "Twin Falls", "Idaho Falls"],
+    "Ontario": ["Toronto", "Ottawa", "Hamilton"],
+    "British Columbia": ["Vancouver", "Victoria"]
+  }
