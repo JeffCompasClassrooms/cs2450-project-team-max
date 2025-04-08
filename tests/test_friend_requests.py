@@ -73,7 +73,8 @@ class TestLikeButton(unittest.TestCase):
         time.sleep(1)
 
         try:
-            WebDriverWait(driver, 3).until(EC.presence_of_element_located((By.CLASS_NAME, "navbar-toggler collapsed"))).click()
+            WebDriverWait(driver, 3).until(EC.presence_of_element_located((By.CSS_SELECTOR, ".navbar-toggler.collapsed"))).click()
+            print('clicked')
         except TimeoutException:
             pass
 
