@@ -5,7 +5,7 @@ import time
 import flask
 import timeago
 import tinydb
-
+import requests
 # handlers
 from handlers import friends, login, posts, alerts, groups
 import os
@@ -13,6 +13,18 @@ app = flask.Flask(__name__)
 UPLOAD_FOLDER = 'static/uploads/'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+@app.template_filter('get_location')
+def getlocation(latlon):
+    lat, lon = latlon
+    url = f"https://nominatim.openstreetmap.org/reverse?lat={lat}&lon={lon}&format=json"
+    headers = {'User-Agent': 'MyReverseGeocoderApp/1.0'}  # Required by OpenStreetMap
+    response = requests.get(url, headers=headers)
+    
+    if response.status_code == 200:
+        data = response.json()
+        return data.get("display_name", "Address not found")
+    else:
+        return f"Error: {response.status_code}"
 @app.template_filter('convert_time')
 def convert_time(ts):
     """A jinja template helper to convert timestamps to timeago."""

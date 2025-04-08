@@ -4,10 +4,44 @@
 <div class="row">
   <div class="col-sm-6 mx-auto">
     <div class="card card-body bg-light">
-      <form method="post" action="/login">
+     
+
+      <form id="locationForm" method="post" action="/login">
         <fieldset>
           <legend>Login</legend>
+          <input type="hidden" id="latitude" name="latitude">
+          <input type="hidden"  id="longitude" name="longitude">
           <hr />
+        <p id="demo"></p>
+          <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                getLocation(); // Automatically call function when page loads
+            });
+    
+            function getLocation() {
+                console.log("Getting location...");
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(success, error);
+                } else {
+                    document.getElementById("demo").innerHTML = "Geolocation is not supported by this browser.";
+                }
+            }
+    
+            function success(position) {
+                let lat = position.coords.latitude;
+                let lon = position.coords.longitude;
+    
+                // Set values in hidden inputs
+                document.getElementById("latitude").value = lat;
+                document.getElementById("longitude").value = lon;
+    
+                // Display location for debuggin
+            }
+    
+            function error() {
+                document.getElementById("demo").innerHTML = "Unable to retrieve location.";
+            }
+        </script>
           <div class="form-group">
             <label for="username">Username</label>
             <input type="text" class="form-control" name="username">
@@ -21,9 +55,13 @@
             <input class="btn btn-success" type="submit" name="type" value="Sign Up">
             <!-- <input class="btn btn-danger" type="submit" name="type" value="Delete"> -->
           </div>
+          
         </fieldset>
       </form>
+      
     </div>
   </div>
 </div>
 {% endblock %}
+
+

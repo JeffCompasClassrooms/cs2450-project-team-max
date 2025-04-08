@@ -1,9 +1,14 @@
 import tinydb
-
-def new_user(db, username, password):
+def update_location(db,user,location):
+    table = db.table('users')
+    User = tinydb.Query()
+    user['location']=location
+    return table.upsert(user,(User.username==user['username']))
+    
+def new_user(db, username, password,lat, long):
     users = db.table('users')
     User = tinydb.Query()
-    if users.get(User.username == username):
+    if users.get((User.username == username)):
         return None
     user_record = {
             'username': username,
@@ -11,10 +16,16 @@ def new_user(db, username, password):
             'friends': [],
             'pending-friends':[],
             'alerts':[],
-            'group':None
+            'group':None,
+            'latitude': lat,
+            'longitude': long,
             }
     return users.insert(user_record)
-
+def get_all_users(db,user):
+    users = db.table('users')
+    User = tinydb.Query()
+    all_users = users.search(User.username != user['username'])    
+    return all_users
 def get_user(db, username, password):
     users = db.table('users')
     User = tinydb.Query()

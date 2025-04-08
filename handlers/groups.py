@@ -56,6 +56,9 @@ def add_member():
     name = flask.request.form.get('iname')
     member = users.get_user_by_name(db,name)
     group = groups.get_group(db,user['group'])
+    if(user['username'] == name):
+        flask.flash("", "danger")
+        return flask.redirect(flask.url_for('login.index'))
     request = [group['name'],'group invite']
     if request not in member['alerts']:
         table = db.table('users')

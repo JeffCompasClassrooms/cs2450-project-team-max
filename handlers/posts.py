@@ -17,9 +17,6 @@ def post():
     media = flask.request.files.get("media") 
     media_filename = None
     media_type = None
-    print(media)
-    print(post)
-
     if media and allowed_file(media.filename):
         file_extension = media.filename.rsplit('.', 1)[1].lower()
 
@@ -41,3 +38,14 @@ def post():
 def allowed_file(filename):
     ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'mp4', 'mov', 'avi', 'webm','mp3','wav','.ogg'}
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+@blueprint.route('/get_posts',methods=['POST'])
+def get_posts():
+    db = helpers.load_db()
+    username = flask.request.cookies.get('username')
+    password = flask.request.cookies.get('password')
+    user = posts.get_user(db, username, password)
+    if not user:
+        flask.flash('You need to be logged in to do that.', 'danger')
+        return flask.redirect(flask.url_for('login.loginscreen'))
+    return flask.redirect(flask.url_for('friend.view_friend',fname=username))
