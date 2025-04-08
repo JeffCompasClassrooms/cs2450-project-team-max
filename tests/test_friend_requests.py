@@ -71,12 +71,9 @@ class TestLikeButton(unittest.TestCase):
         old_url = driver.current_url
         driver.execute_script("window.scrollTo(0, 0);")
         time.sleep(1)
-
-        try:
-            wait.until(EC.presence_of_element_located((By.CSS_SELECTOR,"button[data-toggle= 'collapse'"))).click()
-            print('clicked')
-        except  :
-            pass
+        
+        wait.until(EC.presence_of_element_located((By.CSS_SELECTOR,"button[data-toggle= 'collapse'"))).click()
+        print('clicked')
 
         wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "input[type='submit'][value='Logout']"))).click()
         WebDriverWait(driver, 10).until(EC.url_changes(old_url))
