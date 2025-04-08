@@ -3,7 +3,7 @@ import time
 import unittest
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
-from selenium.common.exceptions import TimeoutException
+from selenium.common.exceptions import ElementNotInteractableException
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
@@ -73,9 +73,9 @@ class TestLikeButton(unittest.TestCase):
         time.sleep(1)
 
         try:
-            WebDriverWait(driver, 3).until(EC.presence_of_element_located((By.CSS_SELECTOR, ".navbar-toggler.collapsed"))).click()
+            WebDriverWait(driver, 3).until(EC.presence_of_element_located((By.CSS_SELECTOR,"button[data-toggle= 'collapse'"))).click()
             print('clicked')
-        except TimeoutException:
+        except :
             pass
 
         wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "input[type='submit'][value='Logout']"))).click()
