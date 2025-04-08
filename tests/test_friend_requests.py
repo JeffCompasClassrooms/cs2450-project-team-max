@@ -28,8 +28,7 @@ driver.execute_cdp_cmd("Emulation.setGeolocationOverride", {
 # driver.executable_path=chrome_driver_path
 
 try:
-    print('in')
-    driver.get("http://localhost:5000/")
+    driver.get("http://localhost:5000")
     
     time.sleep(2)
     
