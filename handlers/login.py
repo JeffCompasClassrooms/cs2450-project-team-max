@@ -41,7 +41,7 @@ def login():
     location = response.json()
     loc = location['loc']
     latitude, longitude = loc.split(",")
-    
+    print(location)
     longitude = float(longitude)
     latitude = float(latitude)
     print(latitude)
