@@ -61,6 +61,37 @@
     overflow-y: hidden; /* Hide vertical scrollbar */
     resize: none; /* Prevent manual resizing */
   }
+  .column-1 {
+    max-width: 60%;
+    height: 200px;
+    margin-top: 2rem;
+    text-align: center;
+    right: -15;
+    color: #D9D9D9;
+    background-color: #4F1B84;
+  }
+  .column-2 {
+    max-width: 60%;
+    height: 200px;
+    margin-top: 2rem;
+    text-align: center;
+    color: #D9D9D9;
+    background-color: #4F1B84;
+  }
+  .column-3 {
+    width: 80%;
+    height: 200px;
+    margin-top: 5rem;
+    text-align: center;
+    color: #D9D9D9;
+    background-color: #4F1B84;
+  }
+  .column-text {
+    font-size: 1.875rem;
+    margin: auto;
+    padding: 10px;
+    color: inherit;
+  }
   .feed-card{
     min-width: 500px;
     min-height: 750px;
