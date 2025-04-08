@@ -67,10 +67,10 @@ class TestLikeButton(unittest.TestCase):
         wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "input[type='text'][name='name']"))).send_keys("admin")
         wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "input[type='submit'][value='Submit']"))).click()
         time.sleep(2)
-
-        logout = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "input[type='submit'][value='Logout']")))
         old_url = driver.current_url
-        logout.click()
+        logout = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "input[type='submit'][value='Logout']"))).click()
+        
+       
         WebDriverWait(driver, 10).until(EC.url_changes(old_url))
 
         old_url = driver.current_url
