@@ -7,6 +7,8 @@ import timeago
  #import tinydb
 
 # handlers
+from handlers.profile import blueprint as profile_blueprint
+app.register_blueprint(profile_blueprint)
 from handlers import profile
 import os
 
@@ -15,6 +17,7 @@ app = flask.Flask(__name__)
 UPLOAD_FOLDER = 'static/profile'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
 
 # db imports
 from db import users, helpers
