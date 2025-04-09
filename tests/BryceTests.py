@@ -81,7 +81,7 @@ class TestLikeButton(unittest.TestCase):
         wait.until(EC.element_to_be_clickable((By.CLASS_NAME, "navbar-toggler"))).click()
         print('clicked')
 
-        wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "input[type='submit'][value='Logout']"))).click()
+        wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "input[type='submit'][value='Logout']"))).click()
         WebDriverWait(driver, 10).until(EC.url_changes(old_url))
         print("[PASSED] - test1 logged out.")
 
@@ -97,7 +97,6 @@ class TestLikeButton(unittest.TestCase):
         wait.until(EC.presence_of_element_located((By.CSS_SELECTOR,"input[type='submit'][value='accept']"))).click()
         time.sleep(2)
         print("[PASSED] - test2 accepted friend request.")
-
         print("--= All Tests Passed =--")
 
 if __name__ == "__main__":
