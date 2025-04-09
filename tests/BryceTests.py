@@ -76,10 +76,10 @@ class TestLikeButton(unittest.TestCase):
         time.sleep(2)
         old_url = driver.current_url
         driver.execute_script("window.scrollTo(0, 0);")
-        time.sleep(1)
+        
 
         wait.until(EC.element_to_be_clickable((By.CLASS_NAME, "navbar-toggler"))).click()
-
+        time.sleep(1)
         wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "input[type='submit'][value='Logout']"))).click()
         WebDriverWait(driver, 10).until(EC.url_changes(old_url))
         print("[PASSED] - test1 logged out.")
