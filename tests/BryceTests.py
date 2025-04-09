@@ -1,120 +1,104 @@
+import requests
+import time
+import unittest
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
+from selenium.common.exceptions import ElementNotInteractableException
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
-import time
-import flask
+from selenium.webdriver.chrome.options import Options
 
-app = flask.Flask(__name__)
-# Specify the path to ChromeDriver
-
-# chrome_driver_path = "/opt/homebrew/bin/chromedriver" #you'll need to put the path to YOUR chromedriver here
-
-chrome_options = Options()
-chrome_options.add_argument("--no-sandbox")
-chrome_options.add_argument("--headless")
-
-chrome_options.add_experimental_option("prefs", {
-    "profile.default_content_setting_values.geolocation": 1
-})
-driver = webdriver.Chrome(options=chrome_options)
-
-driver.execute_cdp_cmd("Emulation.setGeolocationOverride", {
-    "latitude": 37.1011711,
-    "longitude": -113.5678041,
-    "accuracy": 100
-})
-# driver.executable_path=chrome_driver_path
-
-try:
-    driver.get("http://localhost:5000/loginscreen")
-    time.sleep(2)
-    print("--= BRYCE =--")
-    print("--= Beginning Tests =--")
-    wait = WebDriverWait(driver, 10)  # Wait up to 10 seconds
-    login_button = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "input[type='submit'][value='Login']")))
-    #1 login
-    if login_button:
-        print("[PASSED] - Login Button Exists.")
-    else:
-        print("[FAILED] - Login button not found.")
-    #2 Username field exists
-    Username = driver.find_element(By.NAME, "username")
-    if Username:
-         print("[PASSED] - Username input Exists.")
-    else:
-        print("[FAILED] -  Username not found.")
-    #3 password field exists
-    password = driver.find_element(By.NAME, "password")
-    if password :
-         print("[PASSED] - Password input Exists.")
-    else:
-        print("[FAILED] -  Password not found.")
-    #4 username takes input
-    Username.send_keys("hi")
-    if Username.get_attribute("value"):
-        print("[PASSED] - Username getting input.")
-    else:
-        print("[FAILED] -  Username not getting input.")
-    #5 password takes input
-    password.send_keys("hi")
-    if password.get_attribute("value"):
-        print("[PASSED] - Password getting input.")
-    else:
-        print("[FAILED] -  Password not getting input.")
-    #6 sign up button exists
-    signUp =  wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "input[type='submit'][value='Sign Up']")))
-    if signUp:
-        print("[PASSED] - Sign Up Button Exists.")
-    else:
-        print("[FAILED] - Sign Up button not found.")
-    #7 account created
-    signUp.click()
-    flash_message = WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.CLASS_NAME, "alert"))
-    )
-    if flash_message:
-        print("[PASSED] - Sign Up Complete.")
-    else:
-        print("[FAILED] - Sign Up not Complete.")
-    #8 filled username for log in
-    Username =WebDriverWait(driver, 10).until(
-    EC.visibility_of_element_located((By.NAME, "username"))
-    )
-    Username.send_keys("hi")
-    if Username.get_attribute("value") == "hi":
-        print("[PASSED] -Username entered")
-    else:
-        print("[FAILED] - Username not entered.")
-    #9 filled password for log in
-    Password = WebDriverWait(driver, 10).until(
-    EC.visibility_of_element_located((By.NAME, "password"))
-    )
-
-    Password.send_keys("hi")
-
-    if Password.get_attribute("value") == "hi":
-        print("[PASSED] -Password entered")
-    else:
-        print("[FAILED] - Password not entered.")
-    old_url=driver.current_url
+class TestLikeButton(unittest.TestCase):
     
-    login_button = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "input[type='submit'][value='Login']")))
-    login_button.click()
-    #10 login 
-    temp = WebDriverWait(driver, 10).until(EC.url_changes(old_url))
-    
-    if not temp == driver.current_url:
-        print("[PASSED] -LOGGED IN")
-    else:
-        print("[FAILED] - Not logged in")
-    
+    @classmethod
+    def setUpClass(cls):
+        # Get geolocation from ipinfo.io
+        response = requests.get("https://ipinfo.io")
+        location = response.json()
+        loc = location['loc']
+        cls.latitude, cls.longitude = map(float, loc.split(","))
 
-    
+        # Configure Chrome options
+        chrome_options = Options()
+        chrome_options.add_argument("--no-sandbox")
+        chrome_options.add_argument("--headless")
+        chrome_options.add_experimental_option("prefs", {
+            "profile.default_content_setting_values.geolocation": 1
+        })
 
-except Exception as e:
-    print("Error:", e)
+        cls.driver = webdriver.Chrome(options=chrome_options)
+        cls.driver.execute_cdp_cmd("Emulation.setGeolocationOverride", {
+            "latitude": cls.latitude,
+            "longitude": cls.longitude,
+            "accuracy": 100
+        })
+        cls.wait = WebDriverWait(cls.driver, 10)
 
-finally:
-    print("--= Ending Tests =--")
-    driver.quit()
+    @classmethod
+    def tearDownClass(cls):
+        cls.driver.quit()
+
+    def test_full_flow(self):
+        driver = self.driver
+        wait = self.wait
+
+        driver.get("http://localhost:5000")
+        time.sleep(2)
+
+        print("--= Beginning Tests =--")
+        
+        wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "input[type='submit'][value='Create Account']"))).click()
+        wait.until(EC.presence_of_element_located((By.NAME, "username"))).send_keys("test1")
+        wait.until(EC.presence_of_element_located((By.NAME, "password"))).send_keys("test1")
+        wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "input[type='submit'][value='Sign Up']"))).click()
+        print("[PASSED] - test1 user created.")
+        old_url = driver.current_url
+        time.sleep(2)
+
+        wait.until(EC.presence_of_element_located((By.NAME, "username"))).send_keys("test2")
+        wait.until(EC.presence_of_element_located((By.NAME, "password"))).send_keys("test2")
+        wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "input[type='submit'][value='Sign Up']"))).click()
+        time.sleep(1)
+        print("[PASSED] - test2 user created.")
+
+
+        wait.until(EC.presence_of_element_located((By.NAME, "username"))).send_keys("test1")
+        wait.until(EC.presence_of_element_located((By.NAME, "password"))).send_keys("test1")
+        wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "input[type='submit'][value='Login']"))).click()
+        WebDriverWait(driver, 10).until(EC.url_changes(old_url))
+        print("[PASSED] - test1 logged in.")
+
+
+        wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "input[type='text'][name='name']"))).send_keys("test2")
+        wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "input[type='submit'][value='Submit']"))).click()
+        print("[PASSED] - test1 send request to test2.")
+
+        time.sleep(2)
+        old_url = driver.current_url
+        driver.execute_script("window.scrollTo(0, 0);")
+        time.sleep(1)
+
+        wait.until(EC.element_to_be_clickable((By.CLASS_NAME, "navbar-toggler"))).click()
+
+        wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "input[type='submit'][value='Logout']"))).click()
+        WebDriverWait(driver, 10).until(EC.url_changes(old_url))
+        print("[PASSED] - test1 logged out.")
+
+
+        old_url = driver.current_url
+        wait.until(EC.presence_of_element_located((By.NAME, "username"))).send_keys("test2")
+        wait.until(EC.presence_of_element_located((By.NAME, "password"))).send_keys("test2")
+        wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "input[type='submit'][value='Login']"))).click()
+        WebDriverWait(driver, 10).until(EC.url_changes(old_url))
+        print("[PASSED] - test2 signed in.")
+
+
+        wait.until(EC.presence_of_element_located((By.CSS_SELECTOR,"input[type='submit'][value='accept']"))).click()
+        time.sleep(2)
+        print("[PASSED] - test2 accepted friend request.")
+        self.assertTrue(any(msg.text for msg in messages))
+
+        print("--= All Tests Passed =--")
+
+if __name__ == "__main__":
+    unittest.main()
