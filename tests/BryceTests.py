@@ -73,7 +73,7 @@ class TestLikeButton(unittest.TestCase):
         wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "input[type='submit'][value='Submit']"))).click()
         print("[PASSED] - test1 send request to test2.")
 
-       time.sleep(2)
+        time.sleep(2)
         old_url = driver.current_url
         driver.execute_script("window.scrollTo(0, 0);")
         time.sleep(1)
