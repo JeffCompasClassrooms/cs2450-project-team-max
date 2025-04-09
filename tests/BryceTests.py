@@ -81,7 +81,7 @@ class TestLikeButton(unittest.TestCase):
         wait.until(EC.presence_of_element_located((By.CLASS_NAME, "navbar-toggler"))).click()
         print('clicked')
         time.sleep(1)   
-        logout = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "input[type='submit'][value='Logout']")))
+        logout = wait.until(EC.element_to_be_clickable((By.ID, "LOGOUT")))
         print('logout found')
         logout.click()
         WebDriverWait(driver, 10).until(EC.url_changes(old_url))
