@@ -35,6 +35,9 @@
     max-width: 300px;
 
 }
+.message-container{
+    max-width: fit-content;
+}
 .left-oriented{
     right:0px
 }
@@ -57,4 +60,9 @@
     border: 1px solid #fff;
     overflow-y: hidden; /* Hide vertical scrollbar */
     resize: none; /* Prevent manual resizing */
+  }
+  .feed-card{
+    min-width: 500px;
+    min-height: 750px;
+
   }

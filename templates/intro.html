@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="row justify-content-md-center">
+    <div class="col offset-lg-8">
+        <div class="card bg-light mb-3">
+            <div class="card-body">
+                <h2 class="card-title">Meet Other Musicians!</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col col-lg-8">
+        <div class="card bg-light mb-3">
+            <div class="card-body">
+                <h2 class="card-title">Form Your Dream Band!</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col offset-lg-8">
+        <div class="card bg-light mb-3">
+            <div class="card-body">
+                <h2 class="card-title">Discover New Music!</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="col col-lg-10"> 
+    <h3 class="card-title">Don't already have an account?</h3>
+    <form method="post" action="/createaccount">
+        <input class="btn btn-primary" type="submit" name="type" value="Create Account">
+    </form>
+</div>
+
+{% endblock %}

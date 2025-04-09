@@ -21,7 +21,7 @@
       </div>
     </div>
     <div class="chatBox">
-    <h2 class="">My Feed</h2>
+    <h2 class="card bg-light ">My Feed</h2>
     {% for post in posts %}
     <div class="card bg-light">
       <div class="card-body">
@@ -45,7 +45,17 @@
       </div>
     </div>
     {% endfor %}
+
   </div>
+    {% for others in all_users %}
+    <div class="card bg-light mb-2 ">
+    <h3 class="card-title">{{others.username}}</h3>
+    <h6 class="card-subtitle mb-2 text-muted">{{(others.latitude, others.longitude) | get_location}}</h6>
+      
+      
+
+  </div>
+  {% endfor %}
   </div>
   
   
@@ -58,7 +68,7 @@
           <div class="form-group mb-1">
             <input type="text" class="form-control" name="name" placeholder="username" />
           </div>
-          <button type="submit" class="form-control btn btn-primary" name="addfriend">Submit</button>
+          <input type="submit" class="form-control btn btn-primary" value="Submit">
         </form>
       </div>
     </div>
@@ -69,7 +79,7 @@
         {% if friends %}
           <ul>
             {% for friend in friends %}
-              <li><a href="/friend/{{ friend.username }}">{{ friend.username }}</a></li>
+              <li><a href="/{{ friend.username }}">{{ friend.username }}</a></li>
             {% endfor %}
           </ul>
         {% else %}
@@ -148,13 +158,16 @@
 
         {% endif %}
       </div>
+      
+      
     </div>
-    
+ 
     
     </div>  
+    
   
-  </div>
 </div>
+
 
 {% endblock %}
 

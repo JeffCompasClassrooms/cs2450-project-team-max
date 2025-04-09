@@ -2,7 +2,7 @@ name: Run Selenium Tests
 
 on:
   push:
-    branches: [Bryce]
+    branches: [max]
   pull_request:
     branches: [main]
 
@@ -39,5 +39,4 @@ jobs:
       env:
         SELENIUM_REMOTE_URL: http://localhost:4444/wb/hub
       run: |
-        python tests/BryceTests.py
-  
+        python tests/test_friend_requests.py
