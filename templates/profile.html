@@ -4,7 +4,7 @@
 
 {% block content %}
 
-# call the css for this page
+<!-- call the css for this page -->
 <head><link rel="stylesheet" href="{{ url_for('static', filename='profile.css') }}"></head>
 
 <div class="row">
@@ -25,8 +25,20 @@
             <input type="number" class="form-control" name="age" >
           </div>
           <div class="form-group">
-            <label for="instrument">What instrument(s) do you play?</label>     # should be able to list multiple instruments
-            <input type="text" class="form-control" name="instrument" >
+            <label for="instrument">What instrument(s) do you play?</label>
+            <select multiple="instruments" id="instrument" name="instrument" class="form-control">
+              <option value="guitar">Guitar</option>
+              <option value="piano">Piano</option>
+              <option value="drums">Drums</option>
+              <option value="bass">Bass</option>
+              <option value="violin">Violin</option>
+              <option value="flute">Flute</option>
+              <option value="saxophone">Saxophone</option>
+              <option value="vocals">Vocals</option>
+              <option value="harmonica">Harmonica</option>
+              <option value="banjo">Banjo</option>
+              <option value="tambourine">Tambourine</option>
+            </select>
           </div>
           <div class="form-group">
             <label for="experience">How many years of experience do you have with your instrument(s)?</label>
@@ -34,47 +46,34 @@
           </div>
           <div class="form-group">
             <label for="genre">What genres do you play?</label>
-            <ul id="itemList">
-              <li data-index="0"><label><input type="checkbox"> Apple 🍎</label></li>
-              <li data-index="1"><label><input type="checkbox"> Banana 🍌</label></li>
-              <li data-index="2"><label><input type="checkbox"> Cherry 🍒</label></li>
-              <li data-index="3"><label><input type="checkbox"> Grape 🍇</label></li>
-            </ul>
-            <script>
-              const list = document.getElementById('itemList');
-            
-              list.addEventListener('change', (e) => {
-                if (e.target.tagName === 'INPUT' && e.target.type === 'checkbox') {
-                  const li = e.target.closest('li');
-            
-                  if (e.target.checked) {
-                    li.classList.add('highlighted');
-                    list.insertBefore(li, list.firstChild); // move to top
-                  } else {
-                    li.classList.remove('highlighted');
-            
-                    // Re-insert based on original order using data-index
-                    const items = Array.from(list.children);
-                    items.sort((a, b) => +a.dataset.index - +b.dataset.index);
-                    items.forEach(item => list.appendChild(item));
-                  }
-                }
-              });
-            </script>
-            
-            
+            <select multiple="genres" id="genre" name="genre" class="form-control">
+              <option value="rock">Rock</option>
+              <option value="metal">Metal</option>
+              <option value="jazz">Jazz</option>
+              <option value="blues">Blues</option>
+              <option value="classical">Classical</option>
+              <option value="indie">Indie</option>
+              <option value="country">Country</option>
+              <option value="hiphop">Hip Hop</option>
+              <option value="reggae">Reggae</option>
+              <option value="folk">Folk</option>
+              <option value="punk">Punk</option>
+              <option value="popPunk">Pop Punk</option>
+              <option value="alternative">Alternative</option>
+              <option value="shoeGaze">Shoe Gaze</option>
+            </select>
           </div>
           <div class="form-group">
             <label for="covers">Do you intend to create new music or perform cover songs?</label>
-            <select type="covers" id="covers" name="covers" class="form-control">
+            <select id="covers" name="covers" class="form-control">
               <option value="create">Create New Music</option>
               <option value="coverSongs">Perform Cover Songs</option>
           </div>
             
-          # Location
+          <!-- Location -->
           <div class="form-group">
-            <label for="country">Country</label>
-            <select id="country" class="form-control" name="country"></select>
+            <label for="countryLocation">Country</label>
+            <select id="countryLocation" class="form-control" name="countryLocation"></select>
           </div>
           <div class="form-group">
             <label for="state">State/Province</label>
@@ -82,7 +81,7 @@
           </div>
           <div class="form-group">
             <label for="city">City</label>
-            <select id="city" class="form-control" name="location"></select>
+            <select id="city" class="form-control" name="city"></select>
           </div>
 
           <div class="form-group">
@@ -92,9 +91,8 @@
               <option value="no">No</option>
           </div>
           <div class="form-group">
-            <input class="btn btn-primary" type="submit" name="type" value="save">
-            <input class="btn btn-success" type="submit" name="type" value="cancel">
-            <!-- <input class="btn btn-danger" type="submit" name="type" value="Delete"> -->
+            <input class="btn btn-success" type="submit" formaction="{{ url_for('profile.profile') }}" value="save">
+            <input class="btn btn-primary" type="reset" formaction="{{ url_for('profile.cancel') }}" value="cancel">
           </div>
         </fieldset>
       </form>

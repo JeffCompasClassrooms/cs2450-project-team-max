@@ -14,7 +14,10 @@ def profileScreen():
     experience = flask.request.cookies.get('experience')
     genre = flask.request.cookies.get('genre')
     covers = flask.request.cookies.get('covers')
-    location = flask.request.cookies.get('location')
+    countryLocation = flask.request.form.get('countryLocation')
+    state = flask.request.form.get('state')
+    city = flask.request.form.get('city')  
+    location = f"{city}, {state}, {countryLocation}"
     travel = flask.request.cookies.get('travel')
 
     # if value is not None, then the user has already filled out their profile
