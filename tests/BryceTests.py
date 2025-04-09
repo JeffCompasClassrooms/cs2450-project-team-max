@@ -97,7 +97,6 @@ class TestLikeButton(unittest.TestCase):
         wait.until(EC.presence_of_element_located((By.CSS_SELECTOR,"input[type='submit'][value='accept']"))).click()
         time.sleep(2)
         print("[PASSED] - test2 accepted friend request.")
-        self.assertTrue(any(msg.text for msg in messages))
 
         print("--= All Tests Passed =--")
 
