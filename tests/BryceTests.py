@@ -83,7 +83,7 @@ class TestLikeButton(unittest.TestCase):
        
         time.sleep(1)   
 
-        print(navbar)
+        print(navbar.is_enabled())
         is_visible = navbar.is_displayed()
         print(is_visible)
 
@@ -91,7 +91,14 @@ class TestLikeButton(unittest.TestCase):
         time.sleep(1)   
         logout =driver.find_element(By.CSS_SELECTOR, "input[type='submit'][value='Logout']")
         print('logout found')
-        print(logout.get_attribute("value"))
+        print(logout.is_enabled())
+        print(logout.is_displayed())
+        print(logout.rect)
+        print(logout)
+        
+         
+       
+       
         logout.click()
        
         print("[PASSED] - test1 logged out.")
