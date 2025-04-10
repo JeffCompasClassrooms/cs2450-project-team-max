@@ -143,6 +143,7 @@ def profile():
         flask.flash("Please enter Yes or No", 'danger')
         return flask.redirect(flask.url_for('profile.profileScreen'))
  
+ 
     
     # create the user profile in the database
     users.user_profile(db, fullName, age, instrument, experience, genre, covers, location, travel)
