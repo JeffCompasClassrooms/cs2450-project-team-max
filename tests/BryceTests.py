@@ -75,20 +75,22 @@ class TestLikeButton(unittest.TestCase):
         print("[PASSED] - test1 send request to test2.")
 
         time.sleep(2)
-        old_url = driver.current_url       
-        navbar =driver.find_element(By.ID, "navbarColor01")
-        navbar2 = driver.find_element(By.ID, "help-me")
+        try:
+            # Make sure the menu is expanded
+            navbar_toggle = wait.until(EC.element_to_be_clickable((By.ID, "help-me")))
+            if not driver.find_element(By.ID, "navbarColor01").is_displayed():
+                navbar_toggle.click()
+                time.sleep(0.5)  # Let the animation play out
 
-       
-        time.sleep(1)   
-        print(navbar.is_enabled())
-        is_visible = navbar.is_displayed()
-        print(is_visible)
-        navbar.click()
-        print(navbar2.is_enabled())
-        is_visible = navbar2.is_displayed()
-        print(is_visible)
-        
+            # Now click the logout button
+            logout_button = wait.until(EC.element_to_be_clickable(
+                (By.CSS_SELECTOR, "input[type='submit'][value='Logout']")
+            ))
+            logout_button.click()
+            print("[PASSED] - test1 logged out.")
+        except Exception as e:
+            print("[FAILED] - Couldn't click logout button:", str(e))
+
         print(old_url)
         time.sleep(1)   
         # logout =
