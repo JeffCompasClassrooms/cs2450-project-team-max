@@ -89,8 +89,10 @@ class TestLikeButton(unittest.TestCase):
 
         print(old_url)
         time.sleep(1)   
-        wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "input[type='submit'][value='Logout']"))).click()
+        logout = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "input[type='submit'][value='Logout']")))
         print('logout found')
+        print(logout)
+        logout.click()
        
         print("[PASSED] - test1 logged out.")
 
