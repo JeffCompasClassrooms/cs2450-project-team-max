@@ -91,20 +91,6 @@ class TestLikeButton(unittest.TestCase):
         except Exception as e:
             print("[FAILED] - Couldn't click logout button:", str(e))
 
-        print(old_url)
-        time.sleep(1)   
-        # logout =
-        driver.find_element(By.CSS_SELECTOR, "input[type='submit'][value='Logout']").click()
-        # print('logout found')
-        # print(logout.is_enabled())
-        # print(logout.is_displayed())
-        # print(logout.rect)
-        # print(logout.get_attribute('value'))
-        
-         
-       
-       
-        # logout.click()
        
         print("[PASSED] - test1 logged out.")
 
