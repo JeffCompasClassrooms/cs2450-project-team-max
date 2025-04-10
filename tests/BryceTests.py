@@ -57,6 +57,7 @@ class TestLikeButton(unittest.TestCase):
 
         wait.until(EC.presence_of_element_located((By.NAME, "username"))).send_keys("test2")
         wait.until(EC.presence_of_element_located((By.NAME, "password"))).send_keys("test2")
+        print(wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "input[type='submit'][value='Sign Up']"))))
         wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "input[type='submit'][value='Sign Up']"))).click()
         time.sleep(1)
         print("[PASSED] - test2 user created.")
@@ -75,15 +76,23 @@ class TestLikeButton(unittest.TestCase):
 
         time.sleep(2)
         old_url = driver.current_url
-        driver.execute_script("window.scrollTo(0, 0);")
-        time.sleep(1)
+        
+       
+        navbar =driver.find_element(By.CLASS_NAME, "navbar-toggler")
 
-        navbar = wait.until(EC.presence_of_element_located((By.CLASS_NAME, "navbar-toggler")))
-        if navbar.aria-expanded=="false":
-            navbar.click()
-        print('clicked')
+       
         time.sleep(1)   
-        logout = wait.until(EC.element_to_be_clickable((By.ID, "LOGOUT")))
+
+        print(navbar)
+        is_visible = navbar.is_displayed()
+        print(is_visible)
+        aria_expanded = navbar.get_attribute("aria-expanded")
+        print(aria_expanded)
+        # if aria_expanded=="false":
+        #     print('clicked')
+       
+        time.sleep(1)   
+        logout = driver.find_element(By.ID, "logout")
         print('logout found')
         logout.click()
         WebDriverWait(driver, 10).until(EC.url_changes(old_url))

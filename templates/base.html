@@ -15,10 +15,9 @@
           <ul class="navbar-nav pull-right">
           </ul>
           <a class="navbar-brand" href="/">{{ title }}</a>
-          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+          <button id ="navbar" class="navbar-toggler" type="submit" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
-
           <div class="collapse navbar-collapse" id="navbarColor01">
             <ul class="navbar-nav mr-auto">
               <li class="nav-item">
@@ -31,7 +30,7 @@
             <ul class="navbar-nav pull-right">
               {% if user %}
               <form method="post" action="/logout">
-                <input id="LOGOUT" type="submit" class="form-control btn btn-secondary" name="logout" value="Logout">
+                <input id="logout" type="submit" class="form-control btn btn-secondary" name="logout" value="Logout">
               </form>
               {% endif %}
             </ul>
