@@ -13,14 +13,14 @@ def profileScreen():
     age = flask.request.cookies.get('age')
     instrument = flask.request.cookies.get('instrument')
     experience = flask.request.cookies.get('experience')
-    genre = flask.request.cookies.get('genre')
+    genre = flask.request.cookies.get('genre[]')
     covers = flask.request.cookies.get('covers')
     countryLocation = flask.request.form.get('countryLocation')
     state = flask.request.form.get('state')
     city = flask.request.form.get('city')  
     location = f"{city}, {state}, {countryLocation}"
     travel = flask.request.cookies.get('travel')
-
+    
     # if value is not None, then the user has already filled out their profile
     # and we can allow them to edit it
     if all(value is not None for value in users.user_profile(db, fullName, age, instrument, experience, genre, covers, location, travel)):
@@ -31,7 +31,8 @@ def profileScreen():
             instrument=instrument, experience=experience,
             genre=genre, covers=covers, location=location,
             travel=travel)
-        
+    return flask.render_template('profileScreen.html') 
+   
     # Otherwise, present the profile creation form   
 @blueprint.route('/profile', methods=['POST'])
 def profile():
@@ -42,7 +43,7 @@ def profile():
     age = flask.request.form.get('age')
     instrument = flask.request.form.get('instrument')
     experience = flask.request.form.get('experience')
-    genre = flask.request.form.get('genre')
+    genre = flask.request.form.get('genre[]')
     covers = flask.request.form.get('covers')
     countryLocation = flask.request.form.get('countryLocation')
     state = flask.request.form.get('state')
@@ -125,7 +126,7 @@ def profile():
     if genre == "":
         flask.flash("Enter your genre (you can list more than 1!)", 'danger')
         return flask.redirect(flask.url_for('profile.profileScreen'))
-    resp.set_cookie('genre', genre)
+    resp.set_cookie('genre[]', genre)
 
     # making sure the covers section is not empty
     if covers == "":
@@ -166,7 +167,7 @@ def cancel():
     resp.set_cookie('age', '', expires=0)
     resp.set_cookie('instrument', '', expires=0)
     resp.set_cookie('experience', '', expires=0)
-    resp.set_cookie('genre', '', expires=0)
+    resp.set_cookie('genre[]', '', expires=0)
     resp.set_cookie('covers', '', expires=0)
     resp.set_cookie('location', '', expires=0)
     resp.set_cookie('travel', '', expires=0)
