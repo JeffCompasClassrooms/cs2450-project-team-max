@@ -12,14 +12,14 @@ def profileScreen():
     age = flask.request.cookies.get('age')
     instrument = flask.request.cookies.get('instrument')
     experience = flask.request.cookies.get('experience')
-    genre = flask.request.cookies.get('genre')
+    genre = flask.request.cookies.get('genre[]')
     covers = flask.request.cookies.get('covers')
     countryLocation = flask.request.form.get('countryLocation')
     state = flask.request.form.get('state')
     city = flask.request.form.get('city')  
     location = f"{city}, {state}, {countryLocation}"
     travel = flask.request.cookies.get('travel')
-
+    
     # if value is not None, then the user has already filled out their profile
     # and we can allow them to edit it
 
@@ -44,7 +44,7 @@ def profile():
     instrument= instrument.split()
 
     experience = flask.request.form.get('experience')
-    genre = flask.request.form.get('genre')
+    genre = flask.request.form.get('genre[]')
     covers = flask.request.form.get('covers')
     latitude = flask.request.form.get('latitude')
     longitude = flask.request.form.get('longitude')
@@ -145,7 +145,7 @@ def cancel():
     resp.set_cookie('age', '', expires=0)
     resp.set_cookie('instrument', '', expires=0)
     resp.set_cookie('experience', '', expires=0)
-    resp.set_cookie('genre', '', expires=0)
+    resp.set_cookie('genre[]', '', expires=0)
     resp.set_cookie('covers', '', expires=0)
     resp.set_cookie('location', '', expires=0)
     resp.set_cookie('travel', '', expires=0)
