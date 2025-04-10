@@ -10,12 +10,12 @@
     </head>
 
     <body>
-      <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+      <nav  class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
-          <ul class="navbar-nav pull-right">
+          <ul  class="navbar-nav pull-right">
           </ul>
           <a class="navbar-brand" href="/">{{ title }}</a>
-          <button id ="navbar" class="navbar-toggler" type="submit" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+          <button id="help-me" class="navbar-toggler" type="submit" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
           <div class="collapse navbar-collapse" id="navbarColor01">
@@ -27,7 +27,7 @@
                 <a class="nav-link" href="http://127.0.0.1:5000/settings" target="_blank">Settings</a>
               </li>
             </ul>
-            <ul class="navbar-nav pull-right">
+            <ul  class="navbar-nav pull-right">
               {% if user %}
               <form method="post" action="/logout">
                 <input id="logout" type="submit" class="form-control btn btn-secondary" name="logout" value="Logout">

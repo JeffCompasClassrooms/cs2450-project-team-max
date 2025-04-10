@@ -75,31 +75,34 @@ class TestLikeButton(unittest.TestCase):
         print("[PASSED] - test1 send request to test2.")
 
         time.sleep(2)
-        old_url = driver.current_url
-        
-       
-        navbar =driver.find_element(By.CLASS_NAME, "navbar-nav")
+        old_url = driver.current_url       
+        navbar =driver.find_element(By.ID, "navbarColor01")
+        navbar2 = driver.find_element(By.ID, "help-me")
 
        
         time.sleep(1)   
-
         print(navbar.is_enabled())
         is_visible = navbar.is_displayed()
         print(is_visible)
-
+        navbar.click()
+        print(navbar2.is_enabled())
+        is_visible = navbar2.is_displayed()
+        print(is_visible)
+        
         print(old_url)
         time.sleep(1)   
-        logout =driver.find_element(By.CSS_SELECTOR, "input[type='submit'][value='Logout']")
-        print('logout found')
-        print(logout.is_enabled())
-        print(logout.is_displayed())
-        print(logout.rect)
-        print(logout)
+        # logout =
+        driver.find_element(By.CSS_SELECTOR, "input[type='submit'][value='Logout']").click()
+        # print('logout found')
+        # print(logout.is_enabled())
+        # print(logout.is_displayed())
+        # print(logout.rect)
+        # print(logout.get_attribute('value'))
         
          
        
        
-        logout.click()
+        # logout.click()
        
         print("[PASSED] - test1 logged out.")
 
