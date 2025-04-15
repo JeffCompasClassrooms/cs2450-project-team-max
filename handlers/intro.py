@@ -8,9 +8,11 @@ blueprint = flask.Blueprint("intro", __name__)
 def introscreen():
     return flask.render_template('intro.html', title=copy.title, subtitle=copy.subtitle)
 
-@blueprint.route('/createaccount', methods=['POST'])
-def createaccount():
+@blueprint.route('/Sign_in', methods=['POST'])
+def Sign_in():
     resp = flask.make_response(flask.redirect(flask.url_for('login.loginscreen')))
+    resp.set_cookie('username', '', expires=0)
+    resp.set_cookie('password', '', expires=0)    
     return resp
     #return flask.redirect(flask.url_for('login.loginscreen'))
 

@@ -37,25 +37,17 @@ def login():
     #getting username
     username = flask.request.form.get('username')
     password = flask.request.form.get('password')
-    response = requests.get("https://ipinfo.io")
-    location = response.json()
-    loc = location['loc']
-    latitude, longitude = loc.split(",")
-    print(location)
-    longitude = float(longitude)
-    latitude = float(latitude)
-    print(latitude)
-    print(longitude)
+
     #creating a response for login,index
     resp = flask.make_response(flask.redirect(flask.url_for('login.index')))
     #making sure username and password is not empty
     if username == "":
         flask.flash("invalid username", 'danger')
-        return flask.redirect(flask.url_for('login.loginscreen'))
+        return flask.redirect(flask.url_for('profile.create_account'))
     resp.set_cookie('username', username)
     if password == "":
         flask.flash("Invalid password", 'danger')
-        return flask.redirect(flask.url_for('login.loginscreen'))
+        return flask.redirect(flask.url_for('profile.create_account'))
     resp.set_cookie('password', password)
     submit = flask.request.form.get('type')
     if submit == 'Sign Up':
@@ -63,30 +55,21 @@ def login():
             for i in username:
                 #checking if username is a character or a number
                 if not i.isalpha() and not i.isdigit() and not i=='_':
-                    print(i)
                     resp.set_cookie('username', '', expires=0)
                     resp.set_cookie('password', '', expires=0)
                     flask.flash('Username not valid'.format(username), 'danger')
-                    return flask.redirect(flask.url_for('login.loginscreen'))
+                    return flask.redirect(flask.url_for('profile.create_account'))
            
             flask.flash('User {} created successfully!'.format(username), 'success')
-            users.new_user(db,username,password,latitude,longitude)
+            users.new_user(db,username,password)
             resp.set_cookie('password',password)
             resp.set_cookie('username',password)
-            return flask.redirect(flask.url_for('login.loginscreen'))
+            return flask.redirect(flask.url_for('profile.profile'))
         else:
             resp.set_cookie('username', '', expires=0)
             resp.set_cookie('password', '', expires=0)
             flask.flash('Username is taken'.format(username), 'danger')
             return flask.redirect(flask.url_for('login.loginscreen'))
-    
-
-    elif submit == 'Delete':
-        if users.delete_user(db, username, password):
-            resp.set_cookie('username', '', expires=0)
-            resp.set_cookie('password', '', expires=0)
-            flask.flash('User {} deleted successfully!'.format(username), 'success')
-
     return resp
 
 

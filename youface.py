@@ -7,7 +7,7 @@ import timeago
 import tinydb
 import requests
 # handlers
-from handlers import intro, friends, login, posts, alerts, groups, settings
+from handlers import intro, friends, login, posts, alerts, groups, settings, profile, signup
 import os
 app = flask.Flask(__name__)
 UPLOAD_FOLDER = 'static/uploads/'
@@ -37,8 +37,10 @@ app.register_blueprint(posts.blueprint)
 app.register_blueprint(alerts.blueprint)
 app.register_blueprint(groups.blueprint)
 app.register_blueprint(settings.blueprint)
+app.register_blueprint(profile.blueprint)
+app.register_blueprint(signup.blueprint)
 app.secret_key = 'mygroup'
 app.config['SESSION_TYPE'] = 'filesystem'
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 
-app.run(debug=True, host='0.0.0.0', port=5000)
+app.run(debug=True, host='0.0.0.0', port=3000)
