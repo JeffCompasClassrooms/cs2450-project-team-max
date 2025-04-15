@@ -7,7 +7,7 @@ import timeago
 import tinydb
 import requests
 # handlers
-from handlers import friends, login, posts, alerts, groups
+from handlers import intro, friends, login, posts, alerts, groups, settings
 import os
 app = flask.Flask(__name__)
 UPLOAD_FOLDER = 'static/uploads/'
@@ -29,11 +29,14 @@ def getlocation(latlon):
 def convert_time(ts):
     """A jinja template helper to convert timestamps to timeago."""
     return timeago.format(ts, time.time())
+
+app.register_blueprint(intro.blueprint)
 app.register_blueprint(friends.blueprint)
 app.register_blueprint(login.blueprint)
 app.register_blueprint(posts.blueprint)
 app.register_blueprint(alerts.blueprint)
 app.register_blueprint(groups.blueprint)
+app.register_blueprint(settings.blueprint)
 app.secret_key = 'mygroup'
 app.config['SESSION_TYPE'] = 'filesystem'
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0

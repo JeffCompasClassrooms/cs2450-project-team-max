@@ -1,49 +1,112 @@
+<!DOCTYPE html>
 {% extends "base.html" %}
+{% block title %}Create Profile{% endblock %}
 
 {% block content %}
+
+<!-- call the css for this page -->
+<head>
+  <link rel="stylesheet" href="{{ url_for('static', filename='profile.css') }}">
+  <!-- Select2 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <!-- jQuery (required for Select2) -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <!-- Select2 JS -->
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+</head>
+
 <div class="row">
   <div class="col-sm-6 mx-auto">
     <div class="card card-body bg-light">
-      <form method="post" action="/createprofile">
+      <form method="post" action="{{ url_for('profile.profile') }}">
         <fieldset>
           <legend>Create Profile</legend>
           <hr />
           <div class="form-group">
             <label for="fullName">Enter your name</label>
-            <input type="text" class="form-control" name="name">
+            <input type="text" class="form-control" name="fullName" value="{{ fullName or '' }}" placeholder="First and Last Name" required>
           </div>
+          <!--Maybe add email with email command in the input field-->
+          <!--Maybe add telephone number with tel command in the input field-->
           <div class="form-group">
             <label for="age">Enter your age</label>
-            <input type="text" class="form-control" name="age">
+            <input type="text" class="form-control" name="age" placeholder="e.g. 25" number required>
           </div>
           <div class="form-group">
-            <label for="instrument">What instrument(s) do you play?</label>     # should be able to list multiple instruments
-            <input type="text" class="form-control" name="instrument">
+            <label for="instrument">What instrument(s) do you play?</label>
+            <select multiple id="instrument" name="instrument[]" class="form-control select2" type="checkbox">
+              <option value="" disabled selected>Select an instrument</option>
+              <option value="guitar">Guitar</option>
+              <option value="piano">Piano</option>
+              <option value="drums">Drums</option>
+              <option value="bass">Bass</option>
+              <option value="violin">Violin</option>
+              <option value="flute">Flute</option>
+              <option value="saxophone">Saxophone</option>
+              <option value="vocals">Vocals</option>
+              <option value="harmonica">Harmonica</option>
+              <option value="banjo">Banjo</option>
+              <option value="tambourine">Tambourine</option>
+            </select>
+            <input type="hidden" name="instrument" id="instrument">
           </div>
           <div class="form-group">
             <label for="experience">How many years of experience do you have with your instrument(s)?</label>
-            <input type="password" class="form-control" name="experience">
+            <input type="text" class="form-control" name="experience" placeholder="e.g. 5" number>
           </div>
           <div class="form-group">
             <label for="genre">What genres do you play?</label>
-            <input type="text" class="form-control" name="genre">
+            <input class="form-control select2" name="genre" placeholder="e.g. Rock, Metal, Jazz">  
+            <select multiple id="genre" name="genre[]" class="form-control">
+                <option value="text">Rock</option>
+                <option value="metal">Metal</option>
+                <option value="text">Jazz</option>
+                <option value="blues">Blues</option>
+                <option value="classical">Classical</option>
+                <option value="indie">Indie</option>
+                <option value="country">Country</option>
+                <option value="hiphop">Hip Hop</option>
+                <option value="reggae">Reggae</option>
+                <option value="folk">Folk</option>
+                <option value="punk">Punk</option>
+                <option value="popPunk">Pop Punk</option>
+                <option value="alternative">Alternative</option>
+                <option value="shoeGaze">Shoe Gaze</option>
+              </select>
           </div>
           <div class="form-group">
             <label for="covers">Do you intend to create new music or perform cover songs?</label>
-            <input type="text" class="form-control" name="covers">
+            <select id="covers" name="covers" class="form-control">
+              <option value="create">Create New Music</option>
+              <option value="coverSongs">Perform Cover Songs</option>
+            </select>
+          </div>
+            
+          <!-- Location -->
+          <div class="form-group">
+            <label for="countryLocation">Country</label>
+            <select id="countryLocation" class="form-control" name="countryLocation"></select>
           </div>
           <div class="form-group">
-            <label for="location">Where do you live?</label>
-            <input type="password" class="form-control" name="location">
+            <label for="state">State/Province</label>
+            <select id="state" class="form-control" name="state"></select>
           </div>
+          <div class="form-group">
+            <label for="city">City</label>
+            <select id="city" class="form-control" name="city"></select>
+          </div>
+
           <div class="form-group">
             <label for="travel">Are you willing to travel?</label>
-            <input type="password" class="form-control" name="travel">
+            <select id="travel" class="form-control" name="travel"></select>
+              <option value="yes">Yes</option>
+              <option value="no">No</option>
+            </select>
           </div>
+          <!--Maybe add link option relevent to the user such as spotify or youtube. (url) option in the input field-->
           <div class="form-group">
-            <input class="btn btn-primary" type="submit" name="type" value="Save/Finish creating profile">
-            <input class="btn btn-success" type="submit" name="type" value="cancel">
-            <!-- <input class="btn btn-danger" type="submit" name="type" value="Delete"> -->
+            <input class="btn btn-success" type="submit" formaction="{{ url_for('profile.profile') }}" value="save">
+            <input class="btn btn-primary" type="reset" formaction="{{ url_for('profile.cancel') }}" value="cancel">
           </div>
         </fieldset>
       </form>
@@ -51,3 +114,100 @@
   </div>
 </div>
 {% endblock %}
+
+<script>
+const selectedBox = document.getElementById('selected-instruments-box');
+const instrumentSelect = document.getElementById('instrument-select');
+const hiddenField = document.getElementById('instrument-hidden');
+
+function updateHiddenField() {
+  const tags = document.querySelectorAll('.instrument-tag');
+  const values = Array.from(tags).map(tag => tag.textContent);
+  document.getElementById('instruments').value = values.join(',');
+}
+
+instrumentSelect.addEventListener('change', function () {
+    const selectedValue = this.value;
+    const selectedText = this.options[this.selectedIndex].text;
+
+    if (!selectedValue) return;
+
+     // Create tag
+    const tag = document.createElement('span');
+    tag.className = 'instrument-tag badge badge-success mr-2';
+    tag.textContent = selectedText;
+    tag.dataset.value = selectedValue;
+    tag.style.cursor = 'pointer';
+    tag.onclick = () => {
+      selectedBox.removeChild(tag);
+
+      // Re-add option back to the dropdown
+      const option = new Option(selectedText, selectedValue);
+      instrumentSelect.add(option);
+
+      updateHiddenField();
+    };
+    // Add tag, remove from dropdown
+    selectedBox.appendChild(tag);
+    instrumentSelect.remove(instrumentSelect.selectedIndex);
+    instrumentSelect.selectedIndex = 0;
+
+    updateHiddenField();
+  });
+  
+  // After tag is created
+  selectedBox.appendChild(tag);
+  updateHiddenField();
+
+  // Inside tag click event (removal)
+  selectedBox.removeChild(tag);
+  instrumentSelect.appendChild(option);
+  updateHiddenField();
+
+  async function loadJSON(url) {
+    const response = await fetch(url);
+    return await response.json();
+  }
+
+  async function populateDropdowns() {
+    const countries = await loadJSON("/static/data/countries.json");
+    const states = await loadJSON("/static/data/states.json");
+    const cities = await loadJSON("/static/data/cities.json");
+
+    const countrySelect = document.getElementById("countryLocation");
+    const stateSelect = document.getElementById("state");
+    const citySelect = document.getElementById("city");
+
+    // Populate countries
+    countries.forEach(country => {
+      let option = new Option(country, country);
+      countrySelect.add(option);
+    });
+
+    // When country changes
+    countrySelect.addEventListener("change", function () {
+      let selectedCountry = countrySelect.value;
+      stateSelect.innerHTML = "";
+      states[selectedCountry].forEach(state => {
+        let option = new Option(state, state);
+        stateSelect.add(option);
+      });
+      stateSelect.dispatchEvent(new Event("change"));
+    });
+
+    // When state changes
+    stateSelect.addEventListener("change", function () {
+      let selectedState = stateSelect.value;
+      citySelect.innerHTML = "";
+      cities[selectedState].forEach(city => {
+        let option = new Option(city, city);
+        citySelect.add(option);
+      });
+    });
+
+    // Initialize first run
+    countrySelect.dispatchEvent(new Event("change"));
+  }
+
+  document.addEventListener("DOMContentLoaded", populateDropdowns);
+</script>

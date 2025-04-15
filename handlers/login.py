@@ -98,7 +98,7 @@ def logout():
     resp.set_cookie('password', '', expires=0)
     return resp
 
-@blueprint.route('/')
+@blueprint.route('/index')
 def index():
     """Serves the main feed page for the user."""
     db = helpers.load_db()
