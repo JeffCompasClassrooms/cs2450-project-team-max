@@ -5,7 +5,7 @@ def update_location(db,user,location):
     user['location']=location
     return table.upsert(user,(User.username==user['username']))
     
-def new_user(db, username, password,lat, long):
+def new_user(db, username, password):
     users = db.table('users')
     User = tinydb.Query()
     if users.get((User.username == username)):
@@ -17,32 +17,31 @@ def new_user(db, username, password,lat, long):
             'pending-friends':[],
             'alerts':[],
             'group':None,
-            'latitude': lat,
-            'longitude': long,
+            'latitude': None,
+            'longitude': None,
+            'fullName': None,
+            'age': None,
+            'instrument':[],
+            'experience': None,
+            'genre': None,
+            'covers': None,
+            'travel': None
             }
     return users.insert(user_record)
 
-def user_profile(db, fullName, age, instrument, experience, genre, covers, location, travel):
+def user_profile(db, username, **kwargs):
+
     """
     Create a new user profile in the database.
     """
     users = db.table('users')
     User = tinydb.Query()
-    
-    # Create a new user profile record
-    user_profile_record = {
-            'fullName': fullName,
-            'age': age,
-            'instrument': instrument,
-            'experience': experience,
-            'genre': genre,
-            'covers': covers,
-            'location': location,
-            'travel': travel
-            }
+    user = users.get(User.username == username)
+    for key, value in kwargs.items():
+        user[key] = value
     
     # Update the user profile in the database
-    return users.upsert(user_profile_record, User.username == fullName)
+    return users.upsert(user, User.username == user['username'])
 
 def get_all_users(db,user):
     users = db.table('users')

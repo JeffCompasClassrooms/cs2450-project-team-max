@@ -22,10 +22,11 @@ def message(db, sender, receiver, text):
 def get_messages(db, sender, receiver):
     messages = db.table('messages')
     Post = tinydb.Query()
-    
-    # Get messages between sender and receiver
-    return messages.search(
+    messages.search(
         (Post.sender == sender['username']) & (Post.receiver == receiver['username']) |
         (Post.sender == receiver['username']) & (Post.receiver == sender['username'])
     )
+    if message is not None:
+        return messages    # Get messages between sender and receiver
+    return None
 
