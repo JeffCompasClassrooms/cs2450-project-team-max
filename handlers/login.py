@@ -41,9 +41,15 @@ def login():
     #creating a response for login,index
     resp = flask.make_response(flask.redirect(flask.url_for('login.index')))
     #making sure username and password is not empty
+<<<<<<< HEAD
     if username == "":
         flask.flash("invalid username", 'danger')
         return flask.redirect(flask.url_for('profile.create_account'))
+=======
+    if username is "":
+        flask.flash("Invalid username", 'danger')
+        return flask.redirect(flask.url_for('login.loginscreen'))
+>>>>>>> 0c46c2c (adds intro page)
     resp.set_cookie('username', username)
     if password == "":
         flask.flash("Invalid password", 'danger')
@@ -101,7 +107,11 @@ def index():
 
    
     # get the info for the user's feed
+<<<<<<< HEAD
     group = groups.get_group(db,user['group'])
+=======
+    print(user)
+>>>>>>> 0c46c2c (adds intro page)
     friends = users.get_user_friends(db, user)
     all_users =users.get_all_users(db,user)
     print(all_users)
