@@ -25,7 +25,9 @@ def new_user(db, username, password):
             'experience': None,
             'genre': None,
             'covers': None,
-            'travel': None
+            'travel': None,
+            'profile_picture':None,
+            'bio':None
             }
     return users.insert(user_record)
 

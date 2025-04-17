@@ -82,6 +82,11 @@ def view_friend(fname):
         user['alerts'].remove(request)
         table.upsert(user, (User.username == user['username']) &
                         (User.password == user['password']))
+    request = [fname ,'liked']
+    if request in user['alerts']:
+        user['alerts'].remove(request)
+        table.upsert(user, (User.username == user['username']) &
+                        (User.password == user['password']))
     all_posts = posts.get_posts(db, friend)[::-1]
     # sort posts
     sorted_posts = sorted(all_posts, key=lambda post: post['time'], reverse=True)
@@ -102,7 +107,6 @@ def send_message(fname):
 
     friend = users.get_user_by_name(db, fname)
     text= flask.request.form.get('send_message')
-    print(text)
     all_message =messages.get_messages(db,user,friend)
     if text == "" or text == None:
         flask.flash('Must have a message to send', 'danger')

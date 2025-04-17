@@ -25,6 +25,15 @@
         color:white
     }
 }
+.media {
+    padding: 10px;
+    border: 2px solid #555;
+    border-radius: 5px;
+    color: white;
+    background-color: primary;
+    cursor: pointer;
+    font-size: 16px;
+  }
 .mymessage{
     color:white;
     background-color: blue;
@@ -94,6 +103,19 @@
     margin: auto;
     padding: 10px;
     color: inherit;
+  }
+  .circle-img {
+    width: 150px;        /* or any size you want */
+    height: 150px;
+    object-fit: cover;   /* keeps the image nicely cropped */
+    border-radius: 50%;  /* this makes it a circle */
+  }
+  .profile-img {
+    width: 500px;           /* or whatever size fits */
+    height: 250px;
+    object-fit: cover;      /* crops nicely */   /* makes it circular */
+    display: block;
+    margin: auto;
   }
   .feed-card{
     min-width: 500px;

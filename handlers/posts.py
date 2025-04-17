@@ -15,9 +15,12 @@ def post():
         return flask.redirect(flask.url_for('login.loginscreen'))
     post = flask.request.form.get("post")
     media = flask.request.files.get("media") 
+    if (post =="" or post == None) and (media.filename == '' or media.filename ==None):
+        flask.flash('You need to have a message', 'danger')
+        return flask.redirect(flask.url_for('login.index'))
     media_filename = None
     media_type = None
-    if media and allowed_file(media.filename):
+    if media:
         file_extension = media.filename.rsplit('.', 1)[1].lower()
 
         media_filename = f"{user['username']}_{time.time()}.{file_extension}"

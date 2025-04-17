@@ -41,19 +41,13 @@ def login():
     #creating a response for login,index
     resp = flask.make_response(flask.redirect(flask.url_for('login.index')))
     #making sure username and password is not empty
-<<<<<<< HEAD
     if username == "":
         flask.flash("invalid username", 'danger')
-        return flask.redirect(flask.url_for('profile.create_account'))
-=======
-    if username is "":
-        flask.flash("Invalid username", 'danger')
-        return flask.redirect(flask.url_for('login.loginscreen'))
->>>>>>> 0c46c2c (adds intro page)
+        return flask.redirect(flask.url_for('login.login'))
     resp.set_cookie('username', username)
     if password == "":
         flask.flash("Invalid password", 'danger')
-        return flask.redirect(flask.url_for('profile.create_account'))
+        return flask.redirect(flask.url_for('login.login'))
     resp.set_cookie('password', password)
     submit = flask.request.form.get('type')
     if submit == 'Sign Up':
@@ -64,7 +58,7 @@ def login():
                     resp.set_cookie('username', '', expires=0)
                     resp.set_cookie('password', '', expires=0)
                     flask.flash('Username not valid'.format(username), 'danger')
-                    return flask.redirect(flask.url_for('profile.create_account'))
+                    return flask.redirect(flask.url_for('login.login'))
            
             flask.flash('User {} created successfully!'.format(username), 'success')
             users.new_user(db,username,password)
@@ -91,6 +85,7 @@ def logout():
     return resp
 
 @blueprint.route('/index')
+@blueprint.route('/index')
 def index():
     """Serves the main feed page for the user."""
     db = helpers.load_db()
@@ -107,38 +102,16 @@ def index():
 
    
     # get the info for the user's feed
-<<<<<<< HEAD
     group = groups.get_group(db,user['group'])
-=======
-    print(user)
->>>>>>> 0c46c2c (adds intro page)
     friends = users.get_user_friends(db, user)
-    all_users =users.get_all_users(db,user)
-    print(all_users)
-    threshold_meters = 10000
-    filtered_users = [
-        u for u in all_users 
-        if is_near(user['latitude'], user['longitude'], u['latitude'], u['longitude'], threshold_meters)
-    ]
-    
-    # Sort the remaining users by distance to the logged-in user
-    filtered_sorted_users = sorted(
-        filtered_users,
-        key=lambda u: is_near(user['latitude'], user['longitude'], u['latitude'], u['longitude'])
-    )
-    print('in')
-    print(filtered_sorted_users)
     all_posts = []
-    for friend in friends + [user]:
-        all_posts += posts.get_posts(db, friend)
-    # sort posts
+    all_posts += posts.get_posts(db, user)
     sorted_posts = sorted(all_posts, key=lambda post: post['time'], reverse=True)
-
     return flask.render_template('feed.html', title=copy.title,
             subtitle=copy.subtitle, user=user, username=username,
-            friends=friends, posts= sorted_posts,all_users =filtered_sorted_users, alerts=user['alerts'],group = user['group'])
+            friends=friends, posts= sorted_posts, alerts=user['alerts'],group = user['group'])
 
-def is_near(lat1, lon1, lat2, lon2, threshold_meters=1000):
+def is_near(lat1, lon1, lat2, lon2, threshold_meters=1000000000):
     # Radius of Earth in meters
     R = 6371000
 
@@ -166,3 +139,36 @@ def uploaded_file(filename):
 
     return flask.send_from_directory(UPLOAD_FOLDER, filename)
 
+@blueprint.route('/explore')
+def explore():
+    db = helpers.load_db()
+   
+    # make sure the user is logged in
+    username = flask.request.cookies.get('username')
+    password = flask.request.cookies.get('password')
+    if username == "" and password == "":
+        return flask.redirect(flask.url_for('login.loginscreen'))
+    user = users.get_user(db, username, password)
+    if not user:
+        flask.flash("Invalid credentials. If you're new, click the sign up button to become a member.", 'danger')
+        return flask.redirect(flask.url_for('login.loginscreen'))
+    all_users =users.get_all_users(db,user)
+    threshold_meters = 1000000000
+    filtered_users = [
+        u for u in all_users 
+        if is_near(user['latitude'], user['longitude'], u['latitude'], u['longitude'], threshold_meters)
+    ]
+    
+    # Sort the remaining users by distance to the logged-in user
+    filtered_sorted_users = sorted(
+        filtered_users,
+        key=lambda u: is_near(user['latitude'], user['longitude'], u['latitude'], u['longitude'])
+    )
+ 
+   
+    # sort posts
+   
+    all_users =filtered_sorted_users
+    return flask.render_template('explore.html', title=copy.title,
+            subtitle=copy.subtitle, user=user, username=username,all_users = filtered_sorted_users,
+            alerts=user['alerts'])
