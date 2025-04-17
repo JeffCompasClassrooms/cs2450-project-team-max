@@ -30,10 +30,20 @@ jobs:
         pip install -r requirements.txt
         pip install selenium
 
+<<<<<<< HEAD
     - name: Start Flask App in background
       run: |
         nohup python youface.py > flask.log 2>&1 &
         sleep 10
+=======
+      - name: Start Flask App in the background
+        run: |
+          nohup python youface.py > flask.log 2>&1 & 
+          echo $! > flask.pid
+          sleep 10
+          tail -n 20 flask.log  # Show last 20 lines of the log for debugging
+          #cat flask.log
+>>>>>>> e9924d2 (Update Bryce.yml)
 
     - name: Run Selenium Tests
       env:
