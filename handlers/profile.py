@@ -127,6 +127,7 @@ def profile():
         return flask.redirect(flask.url_for('profile.profileScreen'))
     
     # make sure travel is either yes or no
+<<<<<<< HEAD
     media_filename = None
     media_type = None
     # Store in TinyDB
@@ -139,6 +140,13 @@ def profile():
     # Store in TinyDB
     media_url= f"static/uploads/{media_filename}" if media_filename else None
     
+=======
+    if travel != "Yes" and travel != "No":
+        flask.flash("Please enter Yes or No", 'danger')
+        return flask.redirect(flask.url_for('profile.profileScreen'))
+ 
+ 
+>>>>>>> fd028b9 (push)
     
     # create the user profile in the database
     users.user_profile(db, username, fullName =fullName, age =age, instrument = instrument, experience =experience, latitude=latitude, longitude= longitude, genre= genre, covers =covers, travel =travel,profile_picture = media_url)
