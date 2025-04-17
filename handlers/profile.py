@@ -1,6 +1,9 @@
 import flask
+import tinydb
 from handlers import copy
 from db import users, helpers
+import time
+import os
 UPLOAD_FOLDER = 'static/uploads/'
 blueprint = flask.Blueprint("profile", __name__)
 @blueprint.route('/profileScreen')
@@ -26,7 +29,6 @@ def profileScreen():
     # Otherwise, present the profile creation form   
 @blueprint.route('/profile', methods=['POST'])
 def profile():
-
     """Create the user profile."""
     db = helpers.load_db()    
     username= flask.request.cookies.get('username')
@@ -37,8 +39,7 @@ def profile():
     fullName = flask.request.form.get('Fullname')
     age = flask.request.form.get('age')
     instrument = flask.request.form.get('instrument')
-    print(instrument)
-
+    media = flask.request.files.get("media") 
     experience = flask.request.form.get('experience')
     genre = flask.request.form.get('genre[]')
     covers = flask.request.form.get('covers')
@@ -61,11 +62,14 @@ def profile():
         flask.flash("Name must be more than 2 characters", 'danger')
         return flask.redirect(flask.url_for('profile.profileScreen')) 
     # making sure the name is a character and not a number or special character
-    for i in fullName:
-        if not i.isalpha() and not i=='_':
-            print(i)
-            flask.flash("Name not valid. Please don't use numbers or special characters".format(fullName), 'danger')
-            return flask.redirect(flask.url_for('profile.profileScreen'))
+    # for i in fullName:
+    #     print(i)
+    #     if not i.isalpha() and not i=='_' or not i==' ':
+    #         print('ERROR')
+    #         print(i)
+            
+    #         flask.flash("Name not valid. Please don't use numbers or special characters".format(fullName), 'danger')
+    #         return flask.redirect(flask.url_for('profile.profileScreen'))
     
     # making sure the age section is not empty
     if age == "":
@@ -117,15 +121,23 @@ def profile():
     if travel == "":
         flask.flash("Select Yes or No (this field is not required, but it will help you find matches!)", 'danger')
         return flask.redirect(flask.url_for('profile.profileScreen'))
+    
     # make sure travel is either yes or no
-    travel.lower()
-    if travel != "yes" and travel != "no":
-        flask.flash("Please enter Yes or No", 'danger')
-        return flask.redirect(flask.url_for('profile.profileScreen'))
- 
+    media_filename = None
+    media_type = None
+    # Store in TinyDB
+    media_url= f"static/uploads/{media_filename}" if media_filename else None
+    if media:
+        file_extension = media.filename.rsplit('.', 1)[1].lower()
+
+        media_filename = f"{'username'}_{time.time()}.{file_extension}"
+        media.save(os.path.join(UPLOAD_FOLDER, media_filename))
+    # Store in TinyDB
+    media_url= f"static/uploads/{media_filename}" if media_filename else None
+    
     
     # create the user profile in the database
-    users.user_profile(db, username, fullName =fullName, age =age, instrument = instrument, experience =experience, latitude=latitude, longitude= longitude, genre= genre, covers =covers, travel =travel)
+    users.user_profile(db, username, fullName =fullName, age =age, instrument = instrument, experience =experience, latitude=latitude, longitude= longitude, genre= genre, covers =covers, travel =travel,profile_picture = media_url)
     flask.flash('Profile created successfully!', 'success')
     return flask.redirect(flask.url_for('login.index'))
 
@@ -145,3 +157,21 @@ def cancel():
     resp.set_cookie('location', '', expires=0)
     resp.set_cookie('travel', '', expires=0)
     return resp
+@blueprint.route('/like', methods=['POST'])
+def like():
+    liker= flask.request.cookies.get('username')
+    data = flask.request.get_json()  # Get data from the request body
+    db = helpers.load_db()
+    table = db.table('users')
+    User = tinydb.Query()
+    username = data.get('username')
+    print(username)
+    request=[liker,'liked']
+    likee= users.get_user_by_name(db,username)
+   
+    if likee:
+        likee['alerts'].append(request)
+        table.upsert(table.upsert(likee, (User.username == likee['username'])))
+        return flask.jsonify({'success': True, 'username': username}), 200
+    else:
+        return flask.jsonify({'success': False, 'message': 'User already liked or invalid username'}), 400

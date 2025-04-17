@@ -67,4 +67,9 @@ def alerts():
             table.upsert(user, (User.username == user['username']) &
                             (User.password == user['password']))
             return flask.redirect(flask.url_for('login.index'))
+    elif request[1]== 'liked':
+        user['alerts'].remove(request)
+        table.upsert(user, (User.username == user['username']) &
+                        (User.password == user['password']))
+        return flask.redirect(flask.url_for('login.index'))
     return flask.redirect(flask.url_for('login.index'))
