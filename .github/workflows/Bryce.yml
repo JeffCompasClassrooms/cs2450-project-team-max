@@ -45,9 +45,22 @@ jobs:
           #cat flask.log
 >>>>>>> e9924d2 (Update Bryce.yml)
 
+<<<<<<< HEAD
     - name: Run Selenium Tests
       env:
         SELENIUM_REMOTE_URL: http://localhost:4444/wb/hub
       run: |
         python tests/BryceTests.py
   
+=======
+      - name: Run Selenium BryceTests
+        run: |
+          pytest tests/BryceTests -v
+
+      - name: Upload Flask logs if tests fail
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: flask-logs
+          path: flask.log
+>>>>>>> 69da623 (Update Bryce.yml)
