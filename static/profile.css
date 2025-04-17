@@ -1,3 +1,39 @@
+legend {
+    font-size: 2.0em;
+    color: #181b1e; /* Dark gray for better contrast */
+    margin-bottom: 20px;
+    text-align: center;
+    font-weight: bold;
+    letter-spacing: 1px; /* Adds some spacing between letters for better readability */
+    border-bottom: 2px solid #640a6e; /* Adds a bottom border for emphasis */
+    padding-bottom: 10px; /* Adds some space below the text */
+    background-color: #f8f9fa; /* Light background for the legend */
+    border-radius: 5px; /* Rounded corners for the legend */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    margin-top: 20px; /* Adds space above the legend */
+    margin-bottom: 30px; /* Adds space below the legend */
+    font-weight: 600; /* Slightly bolder text for emphasis */
+}
+.form-group.label {
+    font-size: 1.2em; /* Slightly larger font size for better readability */
+    color: #343a40; /* Darker gray for better contrast */
+    margin-bottom: 10px; /* Adds space below the label */
+    font-weight: 500; /* Medium weight for the label */
+    display: block; /* Ensures the label takes up the full width */
+    text-transform: uppercase; /* Makes the label text uppercase for emphasis */
+    letter-spacing: 0.5px; /* Adds slight spacing between letters for better readability */
+    transition: color 0.3s ease; /* Smooth transition for color changes */
+    cursor: pointer; /* Changes cursor to pointer for better UX */
+    padding: 5px 0; /* Adds some padding for better spacing */
+    background-color: #f8f9fa; /* Light background for the label */
+    border-radius: 5px; /* Rounded corners for the label */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    margin-top: 10px; /* Adds space above the label */
+    margin-bottom: 15px; /* Adds space below the label */
+    font-family: 'Arial', sans-serif; /* Sets a clean, modern font */
+    font-weight: 600; /* Slightly bolder text for emphasis */
+    color: #495057; /* Darker gray for better contrast */
+}
 /* General Form Styling */
 form {
     max-width: 600px;
