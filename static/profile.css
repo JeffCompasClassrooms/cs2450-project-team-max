@@ -36,25 +36,21 @@ form-group label {
 }
 /* General Form Styling */
 form {
-    max-width: 600px;
+    max-width: 700px;
     margin: 0 auto;
-    padding: 30px;
+    padding: 40px;
     background: #f8f9fa; 
-    border-radius: 10px;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-}
-
-/* Form Labels */
-label {
-    font-weight: bold;
-    margin-bottom: 5px;
-    display: block;
-    color: #343a40; 
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
 }
 
 /* Input Fields */
 input[type="text"],
-input[type="password"] {
+input[type="password"],
+input[type="number"],
+input[type="file"],
+select,
+textarea {
     width: 100%;
     padding: 10px;
     margin-bottom: 15px;
