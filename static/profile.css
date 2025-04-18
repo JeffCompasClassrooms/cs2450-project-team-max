@@ -1,5 +1,5 @@
 legend {
-    font-size: 2.0em;
+    font-size: 2.5em;
     color: #181b1e; /* Dark gray for better contrast */
     margin-bottom: 20px;
     text-align: center;
@@ -14,9 +14,9 @@ legend {
     margin-bottom: 30px; /* Adds space below the legend */
     font-weight: 600; /* Slightly bolder text for emphasis */
 }
-.form-group.label {
+form-group label {
     font-size: 1.2em; /* Slightly larger font size for better readability */
-    color: #343a40; /* Darker gray for better contrast */
+    color: #000000; /* Darker gray for better contrast */
     margin-bottom: 10px; /* Adds space below the label */
     font-weight: 500; /* Medium weight for the label */
     display: block; /* Ensures the label takes up the full width */
