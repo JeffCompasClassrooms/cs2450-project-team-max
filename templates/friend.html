@@ -1,62 +1,112 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="row justify-content-md-center mb-">
+<div class="row justify-content-md-center mb-4">
   <h3 class="card-title">{{ friend }}</h3>
 </div>
 
 
-<div class="row justify-content-md-center"style="column-gap: 18px";>
-  
-  <div class="card bg-light col-lg-8 ">
-    <h2>Recent Posts</h2>
-      {% for post in posts %}
-   
-      <div class="card-body">
-        <h4 class="card-title">{{ post.user }}</h4>
-        <h6 class="card-subtitle mb-2 text-muted">{{ post.time|convert_time }}</h6>
-        <p class="card-text">{{ post.text }}</p>
-      </div>
+<div class="row justify-content-md-center"style="column-gap: 18px;">
+  <div class ="col col-lg-7">
+    <div class="card bg-light">
+
+      <div class="chatBox">
+        <h2 class=" feed-card ">My Feed</h2>
+        {% for post in posts %}
+        <div class="card bg-light">
+          <div class="card-body">
+            <h4 class="card-title">{{ post.user }}</h4>
+            <h6 class="card-subtitle mb-2 text-muted">{{ post.time|convert_time }}</h6>
+            <p class="card-text">{{ post.text }}</p>
+            {% if post.media_url %}
+              {% if post.media_type == 'audio' %}
+              <audio controls>
+                <source src="{{post.media_url}}" type="{{post_type}}">
+              </audio>
+              {% elif post.media_type == 'video' %}
+              <video width="500px" height="300px" controls>
+                <source src="{{ post.media_url }}" type="{{post.type}}"> 
+              </video>
+              {% else %}
+              <img src="{{post.media_url}}" width="500px" height="300px">
     
-    
-    {% endfor %}
-    
-  </div>
-  
+              {% endif %}
+            {% endif %}
+          </div>
+        </div>
+        {% endfor %}
+      </div>  
+    </div>
+  </div>  
+  <div class ="col col-lg-4">
   <div class="card bg-light ">
-    <div class="card-body">
-      <form method="post" action='/friend/{{ friend.username }}' >
-        <div class="d-none" >
-          <input type="hidden" name="name" value="{{ types }}">
-          <input type="hidden" name="alert" value="{{ message }}">
-          
-      </div>
-        <h3 class="card-title">{{friend}}</h3>
-        <ul>  
-          {% for message in all_messages%}
-            <div class="card rounded-element {{ 'right:225px' if message.sender == user.username else '' }} ">
-               <div class="alert alert mb-0 {{ 'mymessage' if message.sender == user.username else 'othermessage' }}"><span>
-                {{message.sender}}: {{ message.text }}</span>
-                <span style="position: absolute; right: 10px; top: 50%; ">{{ message.time|convert_time }}</span>
-                </div>
-  
-            </div> 
-            {% endfor %}
+      <div class="card-body message-container ">
+        <form method="post" action='/{{ friend.username }}' >
+          <div class="d-none" >
+            <input type="hidden" name="name" value="{{ types }}">
+            <input type="hidden" name="alert" value="{{ message }}">
             
-            
-        </ul> 
-        </form>
-        <div class="col col-lg-8">
-          <div class="card-body" height="auto" max-width="500px" >
-            <form method="post" action="/friend/{{ friend }}/message">
+          </div>
+          <h3 class="card-title">{{friend}}</h3>
+          <ul>  
+            {% for message in all_messages%}
+              <div class="card rounded-element {{ 'right:225px' if message.sender == user.username else '' }} ">
+                <div class="alert alert mb-0 {{ 'mymessage' if message.sender == user.username else 'othermessage' }}"><span>
+                  {{message.sender}}: {{ message.text }}</span>
+                  <span style="position: absolute; right: 10px; top: 50%; ">{{ message.time|convert_time }}</span>
+                  </div>
+              </div> 
+              {% endfor %}
+          </ul> 
+          </form>
+          <div class="card-body" height="auto" >
+            <form method="post" action="/{{ friend }}/message">
                 <textarea  class="form-control auto-expand" name="send_message"  placeholder="Type here" ></textarea>
                 <!-- <div contenteditable="true" name="send_message" class="auto-expand p-2 w-100" style="min-height: 50px;"></div> -->
 
                 <button type="submit" class="btn btn-primary" name="message_submit">Submit</button>
-          </form>
+              </form>
+          </div>  
+        </div>  
       </div>
-        
-</div>
+
+  </div>
+</div>  
+
   
 
 {% endblock %}
+<script>
+  document.addEventListener('DOMContentLoaded', function(){
+
+      
+      let response = fetch("/get_posts", {
+          method: "POST",
+      });
+      let result = response.json();
+      let chatBox = document.getElementById("chatBox");
+      console.log(result)
+
+      let newMessage = document.createElement("p");
+      newMessage.textContent = result.message;
+      chatBox.appendChild(newMessage);
+
+      if (result.media_url) {
+          if (result.is_video) {
+              let video = document.createElement("video");
+              video.src = result.media_url;
+              video.controls = true;
+              video.style.maxWidth = "300px";
+              chatBox.appendChild(video);
+          } else {
+              let img = document.createElement("img");
+              img.src = result.media_url;
+              img.style.maxWidth = "200px";
+              img.style.display = "block";
+              chatBox.appendChild(img);
+          }
+      }
+
+      document.getElementById("chatForm").reset();
+  });
+</script>

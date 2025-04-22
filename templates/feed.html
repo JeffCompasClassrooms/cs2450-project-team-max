@@ -1,10 +1,16 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="row justify-content-md-center mb-4">
-  <h1 class="">Welcome, {{ username }}!</h1>
-</div>
 
+<div class="row justify-content-md-center mb-4">
+    
+  <h1 class="">Welcome, {{ user.fullName }}!</h1>
+
+</div>
+<div class="row justify-content-md-center mb-4">
+    
+  <img class="circle-img" src="{{user.profile_picture}}">
+</div>
 <div class="row justify-content-md-center">
 
   <div class="col col-lg-8">
@@ -21,7 +27,7 @@
       </div>
     </div>
     <div class="chatBox">
-    <h2 class="">My Feed</h2>
+    <h2 class="card bg-light ">My posts</h2>
     {% for post in posts %}
     <div class="card bg-light">
       <div class="card-body">
@@ -45,6 +51,7 @@
       </div>
     </div>
     {% endfor %}
+
   </div>
   </div>
   
@@ -58,7 +65,7 @@
           <div class="form-group mb-1">
             <input type="text" class="form-control" name="name" placeholder="username" />
           </div>
-          <button type="submit" class="form-control btn btn-primary" name="addfriend">Submit</button>
+          <input type="submit" class="form-control btn btn-primary" value="Submit">
         </form>
       </div>
     </div>
@@ -69,7 +76,7 @@
         {% if friends %}
           <ul>
             {% for friend in friends %}
-              <li><a href="/friend/{{ friend.username }}">{{ friend.username }}</a></li>
+              <li><a href="/{{ friend.username }}">{{ friend.username }}</a></li>
             {% endfor %}
           </ul>
         {% else %}
@@ -104,6 +111,10 @@
                     <p class="card-text">{{message }} from {{types}}</p> 
                     <input class="btn btn-primary" type="submit" name="type" value="accept">
                     <input class="btn btn-success" type="submit" name="type" value="decline">
+                    {% elif message == 'liked' %}
+                    <input type="hidden" name="name" value="{{ types }}">
+                    <input type="hidden" name="alert" value="{{ message }}">
+                    <a class="card-text" href="/{{types}}"> {{types}} {{message }} you</a>
                     {% endif %}
                   </div>
                 </li>
@@ -148,13 +159,16 @@
 
         {% endif %}
       </div>
+      
+      
     </div>
-    
+ 
     
     </div>  
+    
   
-  </div>
 </div>
+
 
 {% endblock %}
 

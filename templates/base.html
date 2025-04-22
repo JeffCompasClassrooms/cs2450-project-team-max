@@ -10,43 +10,58 @@
     </head>
 
     <body>
-      <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+      <nav  class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
-          <ul class="navbar-nav pull-right">
+          <ul  class="navbar-nav pull-right">
           </ul>
-          <a class="navbar-brand" href="/">{{ title }}</a>
-          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+          {% if user %}
+          <a class="navbar-brand" href="/index">{{ title }}</a>
+          <button id="help-me" class="navbar-toggler" type="submit" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
-
+          {% else %}
+          <a class="navbar-brand" href="/">{{ title }}</a>
+          <button id="help-me" class="navbar-toggler" type="submit" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          {% endif %}
+          {% if user %}
           <div class="collapse navbar-collapse" id="navbarColor01">
             <ul class="navbar-nav mr-auto">
               <li class="nav-item">
-                <a class="nav-link" href="https://utahtech.edu">Utah Tech</a>
+                <a class="nav-link" href="http://127.0.0.1:5000/index">Home</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="http://127.0.0.1:5000/settings" target="_blank">Settings</a>
               </li>
+              <li class="nav-item">
+                <a class="nav-link" href="http://127.0.0.1:5000/explore">Explore</a>
+              </li>
+              
             </ul>
-            <ul class="navbar-nav pull-right">
-              {% if user %}
+            <ul  class="navbar-nav pull-right">
+              
               <form method="post" action="/logout">
-                <button type="submit" class="form-control btn btn-secondary" name="logout">Logout</button>
+                <input id="logout" type="submit" class="form-control btn btn-secondary" name="logout" value="Logout">
               </form>
               {% endif %}
             </ul>
           </div>
         </div>
       </nav>
-
       <div class="jumbotron">
         <div class="container">
+          {% if user %}
+          <h1><a href="/index">{{title}}</a></h1>
+          {% else %}
           <h1><a href="/">{{title}}</a></h1>
+          {% endif %}
           <p class="lead">{{subtitle}}</p>
         </div>
+
       </div>
 
-      <div class="container">
+      <div class="container" id="main">
         {% with messages = get_flashed_messages(with_categories=true) %}
           {% if messages %}
             {% for category, message in messages %}

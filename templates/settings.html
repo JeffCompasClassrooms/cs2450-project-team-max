@@ -14,9 +14,18 @@
             <input type="text" class="form-control" name="username" placeholder="Enter your username">
           </div>
           <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" class="form-control" name="email" placeholder="Enter your email">
+          </div>
+          <div class="form-group">
+            <label for="phone">Phone Number</label>
+            <input type="tel" class="form-control" name="phone" placeholder="Enter your phone number">
+          </div>
+          <div class="form-group">
             <input class="btn btn-primary" type="submit" name="type" value="Update Info">
           </div>
         </fieldset>
+
         <hr />
         <fieldset>
           <legend>Change Password</legend>
@@ -33,7 +42,15 @@
             <input type="password" class="form-control" name="confirm_password" placeholder="Confirm new password">
           </div>
           <div class="form-group">
-            <input class="btn btn-warning" type="submit" name="type" value="Change Password">
+            <input class="btn btn-primary" type="submit" name="type" value="Change Password">
+          </div>
+        </fieldset>
+        <hr />
+        <fieldset>
+          <legend>Update Your Profile Information</legend>
+          <div class="form-group">
+            <label for="profile">Profile Page</label><br>
+            <a href="{{ url_for('profile.profileScreen') }}" class="btn btn-success">Edit Profile</a>
           </div>
         </fieldset>
         <hr />

@@ -25,6 +25,15 @@
         color:white
     }
 }
+.media {
+    padding: 10px;
+    border: 2px solid #555;
+    border-radius: 5px;
+    color: white;
+    background-color: primary;
+    cursor: pointer;
+    font-size: 16px;
+  }
 .mymessage{
     color:white;
     background-color: blue;
@@ -34,6 +43,9 @@
     background-color: gray;
     max-width: 300px;
 
+}
+.message-container{
+    max-width: fit-content;
 }
 .left-oriented{
     right:0px
@@ -57,4 +69,56 @@
     border: 1px solid #fff;
     overflow-y: hidden; /* Hide vertical scrollbar */
     resize: none; /* Prevent manual resizing */
+  }
+  .feed-card{
+    min-width: 500px;
+    min-height: 750px;
+
+  }
+  .column-1 {
+    max-width: 60%;
+    height: 200px;
+    margin-top: 2rem;
+    text-align: center;
+    align-items: center;
+    right: -15;
+    color: #D9D9D9;
+    background-color: #4F1B84;
+  }
+  .column-2 {
+    max-width: 60%;
+    height: 200px;
+    margin-top: 2rem;
+    text-align: center;
+    align-items: center;
+    color: #D9D9D9;
+    background-color: #4F1B84;
+  }
+  .column-3 {
+    width: 80%;
+    height: 200px;
+    margin-top: 5rem;
+    text-align: center;
+    align-items: center;
+    color: #D9D9D9;
+    background-color: #4F1B84;
+  }
+  .column-text {
+    font-size: 1.875rem;
+    margin: auto;
+    padding: 10px;
+    color: inherit;
+  }
+  .circle-img {
+    width: 150px;        /* or any size you want */
+    height: 150px;
+    object-fit: cover;   /* keeps the image nicely cropped */
+    border-radius: 50%;  /* this makes it a circle */
+  }
+  .profile-img {
+    width: 500px;           /* or whatever size fits */
+    height: 250px;
+    object-fit: cover;      /* crops nicely */   /* makes it circular */
+    display: block;
+    margin: auto;
   }
