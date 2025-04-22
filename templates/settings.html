@@ -17,6 +17,7 @@
             <input class="btn btn-primary" type="submit" name="type" value="Update Info">
           </div>
         </fieldset>
+
         <hr />
         <fieldset>
           <legend>Change Password</legend>
@@ -34,6 +35,13 @@
           </div>
           <div class="form-group">
             <input class="btn btn-warning" type="submit" name="type" value="Change Password">
+          </div>
+        </fieldset>
+        <hr />
+        <fieldset>
+          <legend>Update Your Profile Information</legend>
+          <div class="form-group">
+            <a href="{{ url_for('profile.profileScreen') }}" class="btn btn-success">Edit Profile</a>
           </div>
         </fieldset>
         <hr />
