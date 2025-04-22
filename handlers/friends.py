@@ -20,7 +20,7 @@ def addfriend():
 
     user = users.get_user(db, username, password)
     if not user:
-        flash('You need to be logged in to do that.', 'danger')
+        flask.flash('You need to be logged in to do that.', 'danger')
         return flask.redirect(flask.url_for('login.loginscreen'))
 
     # add the friend
@@ -76,7 +76,13 @@ def view_friend(fname):
         return flask.redirect(flask.url_for('login.loginscreen'))
 
     friend = users.get_user_by_name(db, fname)
+
+    if not friend:
+        flask.flash('Friend not found.', 'danger')
+        return flask.redirect(flask.url_for('login.index'))
+    
     all_message =messages.get_messages(db,user,friend)
+
     request = [fname ,'message']
     if request in user['alerts']:
         user['alerts'].remove(request)

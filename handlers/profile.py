@@ -23,7 +23,6 @@ def profileScreen():
     # and we can allow them to edit it
 
     # If they have already filled out their profile, allow them to make edits
-    flask.flash('You can edit your profile below.', 'info')
     return flask.render_template('profile.html', title=copy.title,)
    
     # Otherwise, present the profile creation form   

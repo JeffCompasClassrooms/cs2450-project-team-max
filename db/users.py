@@ -13,6 +13,8 @@ def new_user(db, username, password):
     user_record = {
             'username': username,
             'password': password,
+            'email': None,
+            'phone': None,
             'friends': [],
             'pending-friends':[],
             'alerts':[],
@@ -118,12 +120,20 @@ def update_password(db, username, new_password):
     result = users_table.update({'password': new_password}, User.username == username)
     print(f"Password update result for username '{username}': {result}")
     return result  # Returns the number of updated records
+
 def update_user(db, user):
     """Updates a user's information in the database."""
     users_table = db.table('users')
     User = tinydb.Query()
-    result = users_table.update({'username': user['username']}, User.username == user['old_username'])
-    return result  # Returns the number of updated records
+    # This gives you a string, either the old username (if available) or current one
+    username_query = user.get('old_username', user['username'])
+    result = users_table.update({
+        'username': user['username'], 
+        'email': user.get('email'),
+        'phone': user.get('phone')
+    }, User.username == username_query)
+    return result
+
 def delete_user(db, username):
     """Deletes a user from the database."""
     users_table = db.table('users')
