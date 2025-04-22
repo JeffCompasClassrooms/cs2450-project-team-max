@@ -1,13 +1,10 @@
 {% extends "base.html" %}
 
 {% block content %}
-
-<!-- call the css for this page -->
-<link rel="stylesheet" href="{{ url_for('static', filename='profile.css') }}">
 <div class="row">
   <div class="col-sm-6 mx-auto">
     <div class="card card-body bg-light">
-      <form id="profileForm" method="post" action="/profile" enctype="multipart/form-data":>
+      <form class="profile_form" id="profileForm" method="post" action="/profile" enctype="multipart/form-data":>
         <input  type="hidden"id="latitude" name="latitude" value="">
         <input  type="hidden" id="longitude"name="longitude" value=""> 
         <fieldset>
