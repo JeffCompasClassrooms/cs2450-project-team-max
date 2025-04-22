@@ -2,16 +2,21 @@
 
 {% block content %}
 <div class="row justify-content-md-center mb-4">
-  <h3 class="card-title">{{ friend }}</h3>
+  <h3 class="card-title">{{ friend.fullName }}</h3>
 </div>
 
-
+<div class="row justify-content-md-center mb-4">
+    
+  <img class="circle-img" src="{{friend.profile_picture}}">
+</div>
 <div class="row justify-content-md-center"style="column-gap: 18px;">
   <div class ="col col-lg-7">
-    <div class="card bg-light">
 
       <div class="chatBox">
-        <h2 class=" feed-card ">My Feed</h2>
+      </div>
+      {% if posts %}
+        <h2>My Feed</h2>
+        
         {% for post in posts %}
         <div class="card bg-light">
           <div class="card-body">
@@ -35,8 +40,13 @@
           </div>
         </div>
         {% endfor %}
-      </div>  
-    </div>
+      {% else %}
+      <div class="card bg-light">
+        <div class="card-body">
+          <h4 class="card-title">No posts yet...</h4>
+        </div>
+      </div>
+      {% endif %}
   </div>  
   <div class ="col col-lg-4">
   <div class="card bg-light ">
@@ -47,7 +57,7 @@
             <input type="hidden" name="alert" value="{{ message }}">
             
           </div>
-          <h3 class="card-title">{{friend}}</h3>
+          <h3 class="card-title">{{friend.fullName}}</h3>
           <ul>  
             {% for message in all_messages%}
               <div class="card rounded-element {{ 'right:225px' if message.sender == user.username else '' }} ">
@@ -60,7 +70,7 @@
           </ul> 
           </form>
           <div class="card-body" height="auto" >
-            <form method="post" action="/{{ friend }}/message">
+            <form method="post" action="/{{ friend.username }}/message">
                 <textarea  class="form-control auto-expand" name="send_message"  placeholder="Type here" ></textarea>
                 <!-- <div contenteditable="true" name="send_message" class="auto-expand p-2 w-100" style="min-height: 50px;"></div> -->
 

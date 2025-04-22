@@ -44,7 +44,12 @@
               <form method="post" action="/logout">
                 <input id="logout" type="submit" class="form-control btn btn-secondary" name="logout" value="Logout">
               </form>
+              {% elif request.path != '/signup' %}
+              <form action="/signup">
+                <input class="btn btn-success" type="submit" name="type" id="Signup"value="Sign Up">
+              </form>
               {% endif %}
+
             </ul>
           </div>
         </div>

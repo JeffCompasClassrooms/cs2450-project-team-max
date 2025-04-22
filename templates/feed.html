@@ -104,11 +104,11 @@
                     {% elif message == 'message' %}
                     <input type="hidden" name="name" value="{{ types }}">
                     <input type="hidden" name="alert" value="{{ message }}">
-                    <p class="card-text">{{message }} from {{types}}</p> 
+                    <a class="card-text" href="/{{types}}"> {{types}} {{message }} you</a>
                     {% elif message == 'group invite' %}
                     <input type="hidden" name="name" value="{{ types }}">
                     <input type="hidden" name="alert" value="{{ message }}">
-                    <p class="card-text">{{message }} from {{types}}</p> 
+                    <a class="card-text" href="/{{types}}"> {{types}} {{message }} you</a>
                     <input class="btn btn-primary" type="submit" name="type" value="accept">
                     <input class="btn btn-success" type="submit" name="type" value="decline">
                     {% elif message == 'liked' %}
