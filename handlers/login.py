@@ -43,11 +43,11 @@ def login():
     #making sure username and password is not empty
     if username == "":
         flask.flash("invalid username", 'danger')
-        return flask.redirect(flask.url_for('login.login'))
+        return flask.redirect(flask.url_for('login.loginscreen'))
     resp.set_cookie('username', username)
     if password == "":
         flask.flash("Invalid password", 'danger')
-        return flask.redirect(flask.url_for('login.login'))
+        return flask.redirect(flask.url_for('login.loginscreen'))
     resp.set_cookie('password', password)
     submit = flask.request.form.get('type')
     if submit == 'Sign Up':
@@ -58,7 +58,7 @@ def login():
                     resp.set_cookie('username', '', expires=0)
                     resp.set_cookie('password', '', expires=0)
                     flask.flash('Username not valid'.format(username), 'danger')
-                    return flask.redirect(flask.url_for('login.login'))
+                    return flask.redirect(flask.url_for('login.loginscreen'))
            
             flask.flash('User {} created successfully!'.format(username), 'success')
             users.new_user(db,username,password)

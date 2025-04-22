@@ -98,7 +98,7 @@ def view_friend(fname):
     sorted_posts = sorted(all_posts, key=lambda post: post['time'], reverse=True)
     return flask.render_template('friend.html', title=copy.title,
             subtitle=copy.subtitle, user=user, username=username,
-            friend=friend['username'],
+            friend=friend,
             friends=users.get_user_friends(db, user), posts=all_posts, all_messages=all_message,alerts=user['alerts'])
 @blueprint.route('/<fname>/message',methods=['POST'])
 def send_message(fname):
