@@ -29,129 +29,109 @@ try:
     else:
         print("[FAILED] - Login button not found.")
 
-    # Step 2: Perform login
+    # Step 2: Navigate to the Create Profile page
+    driver.get("http://localhost:5000/profileScreen")
+    print("--= Beginning Tests for Create Profile Page =--")
+
+    # Test 2: Verify the Create Profile page loads
     try:
-        username_input = WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located((By.NAME, "username"))
+        profile_header = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.TAG_NAME, "legend"))
         )
-        password_input = driver.find_element(By.NAME, "password")
-        login_button = driver.find_element(By.CSS_SELECTOR, "input[type='submit'][value='Login']")
+        if profile_header.text.strip() == "Create Profile":
+            print("[PASSED] - Create Profile page loaded successfully.")
+        else:
+            print("[FAILED] - Create Profile page header is incorrect.")
+    except Exception as e:
+        print("[FAILED] - Create Profile page did not load:", e)
 
-        username_input.send_keys("test_user")  # Replace with a valid username
-        password_input.send_keys("test_password")  # Replace with a valid password
-        login_button.click()
-        print("Current URL after login:", driver.current_url)
-        # Wait for the page to load after login
-        WebDriverWait(driver, 10).until(
-            EC.url_contains("http://localhost:5000/")  # Replace with the URL the user is redirected to after login
+    # Test 3: Verify the Full Name input field exists and is required
+    try:
+        full_name_input = driver.find_element(By.NAME, "Fullname")
+        if full_name_input.get_attribute("required"):
+            print("[PASSED] - Full Name input field exists and is required.")
+        else:
+            print("[FAILED] - Full Name input field is not marked as required.")
+    except Exception as e:
+        print("[FAILED] - Full Name input field not found:", e)
+
+    # Test 4: Verify the Age input field exists and is required
+    try:
+        age_input = driver.find_element(By.NAME, "age")
+        if age_input.get_attribute("required"):
+            print("[PASSED] - Age input field exists and is required.")
+        else:
+            print("[FAILED] - Age input field is not marked as required.")
+    except Exception as e:
+        print("[FAILED] - Age input field not found:", e)
+
+    # Test 5: Verify the Instrument dropdown allows multiple selections
+    try:
+        instrument_dropdown = driver.find_element(By.ID, "instrument")
+        if instrument_dropdown.get_attribute("multiple"):
+            print("[PASSED] - Instrument dropdown allows multiple selections.")
+        else:
+            print("[FAILED] - Instrument dropdown does not allow multiple selections.")
+    except Exception as e:
+        print("[FAILED] - Instrument dropdown not found:", e)
+
+    # Test 6: Verify the Genre dropdown contains all expected options
+    try:
+        genre_dropdown = driver.find_element(By.ID, "genre")
+        options = [option.text for option in genre_dropdown.find_elements(By.TAG_NAME, "option")]
+        expected_options = [
+            "Rock", "Metal", "Jazz", "Blues", "Classical", "Indie", "Country",
+            "Hip Hop", "Reggae", "Folk", "Punk", "Pop Punk", "Alternative", "Shoe Gaze"
+        ]
+        if all(option in options for option in expected_options):
+            print("[PASSED] - Genre dropdown contains all expected options.")
+        else:
+            print("[FAILED] - Genre dropdown is missing some expected options.")
+    except Exception as e:
+        print("[FAILED] - Genre dropdown not found:", e)
+
+    # Test 7: Verify the Covers dropdown functionality
+    try:
+        covers_dropdown = driver.find_element(By.ID, "covers")
+        covers_dropdown.click()
+        options = [option.text for option in covers_dropdown.find_elements(By.TAG_NAME, "option")]
+        if "Create New Music" in options and "Perform Cover Songs" in options:
+            print("[PASSED] - Covers dropdown contains expected options.")
+        else:
+            print("[FAILED] - Covers dropdown is missing expected options.")
+    except Exception as e:
+        print("[FAILED] - Covers dropdown not found:", e)
+
+    # Test 8: Verify the Travel dropdown functionality
+    try:
+        travel_dropdown = driver.find_element(By.ID, "travel")
+        travel_dropdown.click()
+        options = [option.text for option in travel_dropdown.find_elements(By.TAG_NAME, "option")]
+        if "Yes" in options and "No" in options:
+            print("[PASSED] - Travel dropdown contains expected options.")
+        else:
+            print("[FAILED] - Travel dropdown is missing expected options.")
+    except Exception as e:
+        print("[FAILED] - Travel dropdown not found:", e)
+
+    # Test 9: Verify the Profile Picture upload field exists
+    try:
+        profile_picture_upload = driver.find_element(By.ID, "mediaUpload")
+        if profile_picture_upload.get_attribute("accept") == "image/*":
+            print("[PASSED] - Profile Picture upload field exists and accepts images.")
+        else:
+            print("[FAILED] - Profile Picture upload field does not accept images.")
+    except Exception as e:
+        print("[FAILED] - Profile Picture upload field not found:", e)
+
+    # Test 10: Verify the Save button is there
+    try:
+        save_button = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.CSS_SELECTOR, "input[type='submit'][value='save']"))
         )
-        print("[PASSED] - Login successful.")
+        print("[PASSED] - Save button exists.")
     except Exception as e:
-        print("[FAILED] - Login failed:", e)
-        raise
-        
-    # Step 3: Navigate to the settings page
-    driver.get("http://localhost:5000/settings")
-    print("--= Navigated to Settings Page =--")
-
-    # Test 2: Verify the settings page loads
-    try:
-        settings_header = WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located((By.TAG_NAME, "h2"))
-        )
-        if settings_header.text.strip() == "Settings":
-            print("[PASSED] - Settings page loaded successfully.")
-        else:
-            print("[FAILED] - Settings page header is incorrect.")
-    except Exception as e:
-        print("[FAILED] - Settings page did not load:", e)
-    
-    # Test 3: Verify the username input field exists
-    try:
-        username_input = driver.find_element(By.NAME, "username")
-        print("[PASSED] - Username input field exists.")
-    except Exception as e:
-        print("[FAILED] - Username input field not found:", e)
-
-    # Test 4: Verify the update username button exists
-    try:
-        update_button = driver.find_element(By.CSS_SELECTOR, "input[type='submit'][value='Update Info']")
-        print("[PASSED] - Update username button exists.")
-    except Exception as e:
-        print("[FAILED] - Update username button not found:", e)
-
-    # Test 5: Update the username
-    try:
-        username_input = driver.find_element(By.NAME, "username")
-        username_input.clear()
-        username_input.send_keys("new_username")
-        update_button = driver.find_element(By.CSS_SELECTOR, "input[type='submit'][value='Update Info']")
-        update_button.click()
-
-        # Wait for the success message to appear
-        success_message = WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located((By.CSS_SELECTOR, ""))
-        )
-        if "Username updated successfully" in success_message.text.strip():  # Replace with the actual success message
-            print("[PASSED] - Username updated successfully.")
-        else:
-            print("[FAILED] - Username update failed.")
-    except Exception as e:
-        print("[FAILED] - Error while updating username:", e)
-
-    # Test 6: Verify the current password input field exists
-    try:
-        current_password_input = driver.find_element(By.NAME, "current_password")
-        print("[PASSED] - Current password input field exists.")
-    except Exception as e:
-        print("[FAILED] - Current password input field not found:", e)
-
-    # Test 7: Verify the new password input field exists
-    try:
-        new_password_input = driver.find_element(By.NAME, "new_password")
-        print("[PASSED] - New password input field exists.")
-    except Exception as e:
-        print("[FAILED] - New password input field not found:", e)
-
-    # Test 8: Change the password
-    try:
-        current_password_input = driver.find_element(By.NAME, "current_password")
-        new_password_input = driver.find_element(By.NAME, "new_password")
-        confirm_password_input = driver.find_element(By.NAME, "confirm_password")
-        current_password_input.send_keys("old_password")
-        new_password_input.send_keys("new_password")
-        confirm_password_input.send_keys("new_password")
-        change_password_button = driver.find_element(By.CSS_SELECTOR, "input[type='submit'][value='Change Password']")
-        change_password_button.click()
-        time.sleep(2)  # Wait for the page to reload
-        success_message = driver.find_element(By.CLASS_NAME, "alert-success")
-        if "Password changed successfully" in success_message.text:
-            print("[PASSED] - Password changed successfully.")
-        else:
-            print("[FAILED] - Password change failed.")
-    except Exception as e:
-        print("[FAILED] - Error while changing password:", e)
-
-    # Test 9: Verify the delete account button exists
-    try:
-        delete_account_button = driver.find_element(By.CSS_SELECTOR, "input[type='submit'][value='Delete Account']")
-        print("[PASSED] - Delete account button exists.")
-    except Exception as e:
-        print("[FAILED] - Delete account button not found:", e)
-
-    # Test 10: Delete the account
-    try:
-        delete_account_button = driver.find_element(By.CSS_SELECTOR, "input[type='submit'][value='Delete Account']")
-        delete_account_button.click()
-        time.sleep(2)  # Wait for the page to reload
-        success_message = driver.find_element(By.CLASS_NAME, "alert-success")
-        if "Your account has been deleted" in success_message.text:
-            print("[PASSED] - Account deleted successfully.")
-        else:
-            print("[FAILED] - Account deletion failed.")
-    except Exception as e:
-        print("[FAILED] - Error while deleting account:", e)
-
+        print("[FAILED] - Save button not found:", e)
 except Exception as e:
     print("Error:", e)
 
