@@ -3,6 +3,7 @@
 {% block content %}
 
 <!-- call the css for this page -->
+<link rel="stylesheet" href="{{ url_for('static', filename='profile.css') }}">
 <div class="row">
   <div class="col-sm-6 mx-auto">
     <div class="card card-body bg-light">
@@ -14,13 +15,13 @@
           <hr />
           <div class="form-group">
             <label for="fullName">Enter your name</label>
-            <input type="text" class="form-control" name="Fullname" >
+            <input type="text" class="form-control" name="Fullname" placeholder="e.g. John Doe" required>
           </div>
           <!--Maybe add email with email command in the input field-->
           <!--Maybe add telephone number with tel command in the input field-->
           <div class="form-group">
             <label for="age">Enter your age</label>
-            <input type="number" class="form-control" name="age" placeholder="e.g. 25" required>
+            <input type="number" class="form-control" name="age" placeholder="e.g. 25" required number>
           </div>
           <div class="form-group">
             <label for="instrument">What instrument(s) do you play?</label>
