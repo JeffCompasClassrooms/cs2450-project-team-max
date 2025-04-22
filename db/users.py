@@ -124,11 +124,13 @@ def update_user(db, user):
     """Updates a user's information in the database."""
     users_table = db.table('users')
     User = tinydb.Query()
+
+    username_query = user.get('old_username', user['username'])
     result = users_table.update({
         'username': user['username'], 
         'email': user.get('email'),
         'phone': user.get('phone')
-    }, User.username == user['old_username'])
+    }, User.username == username_query['old_username'])
     return result  # Returns the number of updated records
 def delete_user(db, username):
     """Deletes a user from the database."""
